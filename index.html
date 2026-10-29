@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="es">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{color-scheme:light}html{background:#f4f5f7}body{margin:0}</style>
+<title>Laboratorio de modelos discretos</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap">
+<style>
+/* Layout: índice en dos bloques (primer y segundo orden), tarjetas-enlace en grilla */
+:root{--bg:#f4f5f7;--surface:#ffffff;--fg:#1a1f26;--muted:#56606c;--line:#e3e6ea;--line2:#b9c0c9;--accent:#d4521a;--chip:#eceff3;
+--display:"Newsreader",Georgia,serif;--sans:"IBM Plex Sans",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,Menlo,monospace}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#101318;--surface:#171b21;--fg:#e9ecf0;--muted:#a3adb9;--line:#262c35;--line2:#434b57;--accent:#f27a45;--chip:#222831;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#101318;--surface:#171b21;--fg:#e9ecf0;--muted:#a3adb9;--line:#262c35;--line2:#434b57;--accent:#f27a45;--chip:#222831;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:15px;line-height:1.5;padding-block:28px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1040px;margin:0 auto;display:flex;flex-direction:column;gap:30px}
+h1{font-family:var(--display);font-weight:600;font-size:clamp(28px,5vw,42px);line-height:1.1;margin:0;text-wrap:balance}
+.lead{color:var(--muted);margin:8px 0 0;max-width:62ch}
+.meta{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+h2{font-family:var(--display);font-weight:600;font-size:24px;margin:0;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+h2 small{font-family:var(--sans);font-size:13px;font-weight:400;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px;margin-top:12px}
+.item{display:flex;flex-direction:column;gap:8px;min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;color:inherit;text-decoration:none}
+.item:hover{border-color:var(--accent)}
+.item:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.name{font-weight:600;font-size:16px}
+.eqn{background:var(--chip);border-radius:6px;padding:6px 10px;align-self:flex-start;max-width:100%;overflow-x:auto;font-size:13.5px;color:var(--fg)}
+mjx-container{margin:0 !important;color:inherit}
+.desc{color:var(--muted);font-size:14px;flex:1}
+.go{font-size:13px;font-weight:600;color:var(--accent)}
+</style>
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)']]},svg:{fontCache:'none'}};</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.min.js" async></script>
+<div class="wrap">
+<header>
+<div class="meta">Matemática Aplicada II · Ecuaciones en diferencias</div>
+<h1>Laboratorio de modelos discretos</h1>
+<p class="lead">Once simuladores, uno por modelo. Cada página tiene deslizadores, casos precargados y un resumen con el equilibrio, las raíces y el tipo de trayectoria.</p>
+</header>
+<section>
+<h2>Primer orden <small>Modelos I · \(y_{t+1}=A\,y_t+B\), estable si \(|A|<1\)</small></h2>
+<div class="grid">
+<a class="item" href="ecuacion-canonica.html"><span class="name">Ecuación canónica</span><span class="eqn">\(y_{t+1}=A\,y_t+B\)</span><span class="desc">Movés \(A\), \(B\) e \(y_0\) y ves la trayectoria, el punto fijo y el diagrama de fase. Sirve para fijar los cuatro casos según \(A\).</span><span class="go">Abrir →</span></a>
+<a class="item" href="interes-y-rentas.html"><span class="name">Interés y rentas ciertas</span><span class="eqn">\(S_{t+1}=(1+i)\,S_t+c\)</span><span class="desc">Capitalización, valor de una renta y saldo de un préstamo como ecuación de primer orden.</span><span class="go">Abrir →</span></a>
+<a class="item" href="telarana-estandar.html"><span class="name">Telaraña estándar</span><span class="eqn">\(P_{t+1}=-\dfrac{\delta}{\beta}\,P_t+\dfrac{\alpha+\gamma}{\beta}\)</span><span class="desc">El ciclo de la telaraña con reproducción animada. Estable si \(\delta<\beta\).</span><span class="go">Abrir →</span></a>
+<a class="item" href="expectativas-adaptativas.html"><span class="name">Expectativas adaptativas</span><span class="eqn">\(A=1-\eta\left(1+\dfrac{\delta}{\beta}\right)\)</span><span class="desc">Cómo la velocidad de ajuste \(\eta\) estabiliza un mercado que con expectativas ingenuas explota.</span><span class="go">Abrir →</span></a>
+<a class="item" href="mercado-con-inventarios.html"><span class="name">Mercado con inventarios</span><span class="eqn">\(A=1-\sigma(\beta+\delta)\)</span><span class="desc">Ajuste de precios por exceso de oferta. Zonas monótona, oscilante amortiguada y explosiva según \(\sigma\).</span><span class="go">Abrir →</span></a>
+</div>
+</section>
+<section>
+<h2>Segundo orden <small>Modelos II · estable dentro del triángulo de Schur</small></h2>
+<div class="grid">
+<a class="item" href="triangulo-de-estabilidad.html"><span class="name">Triángulo de estabilidad</span><span class="eqn">\(1-q>0,\;1+p+q>0,\;1-p+q>0\)</span><span class="desc">Arrastrás el punto \((p,q)\) por el triángulo de Schur y ves las raíces y la trayectoria.</span><span class="go">Abrir →</span></a>
+<a class="item" href="telarana-extrapolacion.html"><span class="name">Telaraña con extrapolación</span><span class="eqn">\(P_{t+2}+\mu(1+\phi)P_{t+1}-\mu\phi P_t=g\)</span><span class="desc">Moviendo \(\phi\) y \(\delta/\beta\) se ven las raíces, los ciclos y la región de estabilidad en el plano \((\mu,\phi)\).</span><span class="go">Abrir →</span></a>
+<a class="item" href="metzler.html"><span class="name">Inventarios de Metzler</span><span class="eqn">\(Y_{t+2}-c(2+k)Y_{t+1}+c(1+k)Y_t=V_0\)</span><span class="desc">Los cuatro regímenes del ingreso según \(c\) y \(k\). Un shock y la respuesta del sistema.</span><span class="go">Abrir →</span></a>
+</div>
+</section>
+<section>
+<h2>Macroeconomía dinámica <small>Modelos III · segundo orden con parámetros macro</small></h2>
+<div class="grid">
+<a class="item" href="samuelson.html"><span class="name">Samuelson</span><span class="eqn">\(Y_{t+2}-\gamma(1+\alpha)Y_{t+1}+\alpha\gamma Y_t=G_0\)</span><span class="desc">Multiplicador más acelerador. Moviendo \(\alpha\) y \(\gamma\) se ven los cuatro regímenes y el ciclo endógeno. Estable si \(\alpha\gamma<1\).</span><span class="go">Abrir →</span></a>
+<a class="item" href="hicks.html"><span class="name">Hicks</span><span class="eqn">\(Y_{t+2}-(\gamma+\alpha)Y_{t+1}+\alpha Y_t=I_0(1+g)^{t+2}\)</span><span class="desc">Ciclo alrededor de una tendencia creciente, con techo y piso opcionales. Estable si \(\alpha<1\).</span><span class="go">Abrir →</span></a>
+<a class="item" href="inflacion-desempleo.html"><span class="name">Inflación y desempleo</span><span class="eqn">\(p_{t+2}-a_1p_{t+1}+a_2p_t=\tfrac{j\beta k m}{1+\beta k}\)</span><span class="desc">Phillips con expectativas adaptativas. Un cambio de \(m\), la trayectoria y la curva de largo plazo según \(g\).</span><span class="go">Abrir →</span></a>
+</div>
+</section>
+</div>

@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="es">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{color-scheme:light}html{background:#f4f5f7}body{margin:0}.volver{font-size:13px;color:var(--muted);text-decoration:none}.volver:hover{color:var(--fg);text-decoration:underline}
+</style>
+<title>Mercado con inventarios</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap">
+<style>
+:root{
+  --bg:#f4f5f7;--surface:#ffffff;--fg:#1a1f26;--muted:#56606c;--faint:#8a94a0;
+  --line:#e3e6ea;--line2:#b9c0c9;--demand:#d4521a;--supply:#2461b5;--c3:#6b3fa0;
+  --good:#17703d;--warn:#8f6200;--bad:#b3261e;--chip:#eceff3;
+  --zone1:#f7dcc9;--zone2:#f0b98f;--okfill:#e3f1e8;
+  --display:"Newsreader",Georgia,"Times New Roman",serif;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#101318;--surface:#171b21;--fg:#e9ecf0;--muted:#a3adb9;--faint:#76808c;
+  --line:#262c35;--line2:#434b57;--demand:#f27a45;--supply:#6aa4f2;--c3:#b595e8;
+  --good:#58c88a;--warn:#e0b04a;--bad:#f2837b;--chip:#222831;
+  --zone1:#4a3022;--zone2:#7a4a2a;--okfill:#1f3a2b;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#101318;--surface:#171b21;--fg:#e9ecf0;--muted:#a3adb9;--faint:#76808c;
+  --line:#262c35;--line2:#434b57;--demand:#f27a45;--supply:#6aa4f2;--c3:#b595e8;
+  --good:#58c88a;--warn:#e0b04a;--bad:#f2837b;--chip:#222831;
+  --zone1:#4a3022;--zone2:#7a4a2a;--okfill:#1f3a2b;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:15px;line-height:1.5;
+  padding-block:20px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+h1{font-family:var(--display);font-weight:600;font-size:clamp(26px,4vw,36px);line-height:1.15;margin:0;text-wrap:balance}
+.sub{color:var(--muted);margin:4px 0 0;font-size:14px}
+.eq{display:flex;flex-wrap:wrap;gap:8px 14px;font-family:var(--mono);font-size:14px;margin-top:10px}
+.eq span{background:var(--chip);padding:4px 10px;border-radius:6px}
+.bar{display:flex;flex-wrap:wrap;gap:10px 12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.bar .sep{width:1px;align-self:stretch;background:var(--line)}
+.bar .lbl{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+button{font:inherit;font-weight:500;color:var(--fg);background:var(--surface);border:1px solid var(--line2);border-radius:8px;padding:7px 13px;cursor:pointer}
+button:hover{background:var(--chip)}
+button:focus-visible,input:focus-visible{outline:2px solid var(--supply);outline-offset:2px}
+button.go{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+button.go:hover{opacity:.88;background:var(--fg)}
+button.on{background:var(--chip);border-color:var(--fg)}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;align-items:start}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px}
+.charts{display:flex;flex-direction:column;gap:12px;min-width:0}
+.row2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+.side{display:flex;flex-direction:column;gap:16px;min-width:0}
+h2{font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:0 0 10px}
+.cap{font-size:13px;color:var(--muted);margin:0 0 6px}
+.ctl{display:flex;flex-direction:column;gap:2px;margin-bottom:10px}
+.ctl label{display:flex;justify-content:space-between;font-size:14px;color:var(--muted)}
+.ctl output{font-family:var(--mono);color:var(--fg);font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:var(--supply)}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{background:var(--chip);border-radius:8px;padding:8px 10px;min-width:0}
+.stat.w{grid-column:1/-1}
+.stat .l{font-size:12px;color:var(--muted)}
+.stat .v{font-family:var(--mono);font-size:17px;font-weight:500;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.stat .v.t{font-family:var(--sans);font-size:15px;font-weight:600}
+#msg{font-size:14px;color:var(--bad);min-height:21px;margin-top:8px}
+svg{display:block;width:100%;height:auto}
+svg text{font-family:var(--sans)}
+.leg{display:flex;gap:16px;font-size:13px;color:var(--muted);margin-bottom:6px;flex-wrap:wrap}
+.leg i{display:inline-block;width:18px;height:3px;border-radius:2px;vertical-align:middle;margin-right:6px}
+.leg i.sq{height:10px;width:12px;border-radius:2px}
+.hint{font-size:12.5px;color:var(--faint);margin:6px 0 0}
+@media (max-width:860px){.layout{grid-template-columns:minmax(0,1fr)}.bar .sep{display:none}.row2{grid-template-columns:minmax(0,1fr)}}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+
+
+</style>
+<div class="wrap">
+<a class="volver" href="index.html">← Laboratorio de modelos discretos</a>
+  <header>
+    <h1>Mercado con inventarios</h1>
+    <p class="sub">Matemática Aplicada II · Ajuste de precios según el inventario</p>
+    <div class="eq"><span>P<sub>t+1</sub> = P<sub>t</sub> − σ·(Q<sup>s</sup><sub>t</sub> − Q<sup>d</sup><sub>t</sub>)</span><span>A = 1 − σ(β+δ)</span><span>estable ⇔ σ &lt; 2/(β+δ)</span></div>
+  </header>
+  <div class="bar">
+    <span class="lbl">Ajuste σ(β+δ)</span>
+    <button type="button" id="b1">0,5 monótona</button>
+    <button type="button" id="b2">1,5 amortiguada</button>
+    <button type="button" id="b3">2 uniforme</button>
+    <button type="button" id="b4">2,5 explosiva</button>
+    <span class="sep"></span>
+    <button type="button" class="go" id="step">Siguiente paso</button>
+    <button type="button" class="go" id="pl">Reproducir</button>
+    <button type="button" id="rs">Reiniciar</button>
+  </div>
+  <div class="layout">
+    <div class="charts">
+      <div class="card "><p class="cap">Mercado: el precio P<sub>t</sub> fija cuánto se ofrece (punto azul) y cuánto se demanda (punto naranja). La diferencia se acumula como inventario.</p><svg id="c1" style="max-width:520px;margin:0 auto" viewBox="0 0 420 300" role="img" aria-label="Oferta, demanda y precio vigente"></svg><p class="cap" id="gap" style="margin-top:6px"></p></div>
+      <div class="card "><svg id="c2" viewBox="0 0 680 210" role="img" aria-label="Precio en el tiempo"></svg></div>
+      <div class="card "><p class="cap">Cambio de inventario en cada período: Q<sup>s</sup> − Q<sup>d</sup>. Naranja se acumula stock; azul se vacía.</p><svg id="c3" viewBox="0 0 680 170" role="img" aria-label="Variación de inventarios"></svg></div>
+      <div class="card "><p class="cap">Velocidad de ajuste σ(β+δ) = 1 − A.</p><svg id="c4" viewBox="0 0 680 74" role="img" aria-label="Zonas de estabilidad según el ajuste"></svg></div>
+    </div>
+    <aside class="side">
+      <div class="card "><h2>Resultados</h2><div class="stats"><div class="stat"><div class="l">A = 1 − σ(β+δ)</div><div class="v" id="vA"></div></div><div class="stat"><div class="l">P*</div><div class="v" id="vP"></div></div><div class="stat w"><div class="l">σ(β+δ)</div><div class="v" id="vs"></div></div><div class="stat w"><div class="l">Trayectoria</div><div class="v t" id="vT"></div></div><div class="stat w"><div class="l">Período · P<sub>t</sub></div><div class="v" id="vt"></div></div></div><div id="msg" role="status"></div></div>
+      <div class="card "><h2>Parámetros</h2><div class="ctl"><label for="al">α (demanda) <output id="o_al"></output></label><input type="range" id="al" min="6" max="20" step="0.5" value="10" data-d="1"></div><div class="ctl"><label for="ga">γ (oferta) <output id="o_ga"></output></label><input type="range" id="ga" min="0" max="6" step="0.5" value="2" data-d="1"></div><div class="ctl"><label for="be">β (pendiente de D) <output id="o_be"></output></label><input type="range" id="be" min="0.5" max="4" step="0.1" value="1" data-d="1"></div><div class="ctl"><label for="de">δ (pendiente de S) <output id="o_de"></output></label><input type="range" id="de" min="0.5" max="4" step="0.1" value="2" data-d="1"></div><div class="ctl"><label for="sg">σ (ajuste del precio) <output id="o_sg"></output></label><input type="range" id="sg" min="0.01" max="1" step="0.01" value="0.5" data-d="3"></div><div class="ctl"><label for="d">P₀ − P* <output id="o_d"></output></label><input type="range" id="d" min="-2" max="3" step="0.1" value="0.4" data-d="1"></div><div class="ctl"><label for="sp">Velocidad <output id="o_sp"></output></label><input type="range" id="sp" min="0.3" max="3" step="0.1" value="1" data-d="1"></div></div>
+    </aside>
+  </div>
+</div>
+<script>
+var $=function(i){return document.getElementById(i)};
+function F(x,d){if(x==null||!isFinite(x))return '—';return x.toLocaleString('es-AR',{maximumFractionDigits:d==null?2:d})}
+function cl(x,a,b){return Math.max(a,Math.min(b,x))}
+function sb(b,k){return b+'<tspan dy="3" font-size="10">'+k+'</tspan>'}
+var TX='style="fill:var(--muted)"',TXF='style="fill:var(--fg)"',AX='style="stroke:var(--line2)"';
+function niceStep(span,n){var r=span/n,m=Math.pow(10,Math.floor(Math.log10(r))),f=r/m;return(f<1.5?1:f<3.5?2:f<7.5?5:10)*m}
+function ticks(lo,hi,n){var s=niceStep(hi-lo,n),a=Math.ceil(lo/s-1e-9)*s,o=[];for(var v=a;v<=hi+1e-9;v+=s)o.push(Math.abs(v)<1e-12?0:+v.toFixed(10));return o}
+function bindSliders(ids,cb){ids.forEach(function(i){var e=$(i),o=$('o_'+i);var u=function(){if(o)o.textContent=F(+e.value,+(e.dataset.d||2))};e.addEventListener('input',function(){u();cb(i)});u()})}
+function setv(i,v){var e=$(i);e.value=v;var o=$('o_'+i);if(o)o.textContent=F(+e.value,+(e.dataset.d||2))}
+function frame(W,H,L,R,T,B,x0,x1,y0,y1){var w=W-L-R,h=H-T-B;return{W:W,H:H,L:L,R:R,T:T,B:B,w:w,h:h,x0:x0,x1:x1,y0:y0,y1:y1,
+ X:function(v){return L+(v-x0)/(x1-x0)*w},Y:function(v){return T+h-(v-y0)/(y1-y0)*h},
+ ix:function(px){return x0+(px-L)/w*(x1-x0)},iy:function(py){return y0+(T+h-py)/h*(y1-y0)}}}
+function clip(id,f){return'<defs><clipPath id="'+id+'"><rect x="'+f.L+'" y="'+(f.T-2)+'" width="'+f.w+'" height="'+(f.h+4)+'"/></clipPath></defs>'}
+function axes(f,o){var s='';
+ (o.yt||[]).forEach(function(v){s+='<line x1="'+f.L+'" x2="'+(f.L+f.w)+'" y1="'+f.Y(v)+'" y2="'+f.Y(v)+'" style="stroke:var(--line)"/><text x="'+(f.L-6)+'" y="'+(f.Y(v)+4)+'" font-size="11" text-anchor="end" '+TX+'>'+(o.yf?o.yf(v):F(v))+'</text>'});
+ (o.xt||[]).forEach(function(v){s+='<line x1="'+f.X(v)+'" x2="'+f.X(v)+'" y1="'+f.T+'" y2="'+(f.T+f.h)+'" style="stroke:var(--line)"/><text x="'+f.X(v)+'" y="'+(f.T+f.h+16)+'" font-size="11" text-anchor="middle" '+TX+'>'+(o.xf?o.xf(v):F(v))+'</text>'});
+ s+='<line x1="'+f.L+'" y1="'+(f.T+f.h)+'" x2="'+(f.L+f.w)+'" y2="'+(f.T+f.h)+'" '+AX+'/><line x1="'+f.L+'" y1="'+f.T+'" x2="'+f.L+'" y2="'+(f.T+f.h)+'" '+AX+'/>';
+ if(o.xl)s+='<text x="'+(f.L+f.w)+'" y="'+Math.min(f.T+f.h+30,f.H-3)+'" font-size="12" text-anchor="end" '+TX+'>'+o.xl+'</text>';
+ if(o.yl)s+='<text x="'+(f.L+6)+'" y="'+(f.T+12)+'" font-size="12" '+TX+'>'+o.yl+'</text>';
+ return s}
+function poly(f,pts,color,w,dots,dash){if(pts.length<1)return'';var s='';
+ if(pts.length>1)s+='<polyline fill="none" stroke-linejoin="round" stroke-linecap="round" style="stroke:'+color+'" stroke-width="'+(w||2)+'"'+(dash?' stroke-dasharray="'+dash+'"':'')+' points="'+pts.map(function(p){return f.X(p[0]).toFixed(1)+','+f.Y(p[1]).toFixed(1)}).join(' ')+'"/>';
+ if(dots)pts.forEach(function(p){s+='<circle cx="'+f.X(p[0]).toFixed(1)+'" cy="'+f.Y(p[1]).toFixed(1)+'" r="'+dots+'" style="fill:'+color+'"/>'});return s}
+function hl(f,v,label,color,dash){var y=f.Y(v);return'<line x1="'+f.L+'" x2="'+(f.L+f.w)+'" y1="'+y+'" y2="'+y+'" style="stroke:'+(color||'var(--line2)')+'" stroke-width="1.3" stroke-dasharray="'+(dash||'5 4')+'"/>'+(label?'<text x="'+(f.L+f.w-4)+'" y="'+(y-5)+'" font-size="12" text-anchor="end" '+TXF+'>'+label+'</text>':'')}
+function tip(f,x,y,color){return'<circle cx="'+f.X(x)+'" cy="'+f.Y(y)+'" r="5.5" stroke-width="2" style="fill:'+color+';stroke:var(--surface)"/>'}
+function yrange(vals,pad){var lo=Math.min.apply(null,vals),hi=Math.max.apply(null,vals);if(hi-lo<1e-9){hi+=0.5;lo-=0.5}var p=(hi-lo)*(pad==null?0.1:pad);return[lo-p,hi+p]}
+function svgXY(e,el){var r=el.getBoundingClientRect(),vb=el.viewBox.baseVal;return[(e.clientX-r.left)/r.width*vb.width,(e.clientY-r.top)/r.height*vb.height]}
+function drag(el,fn){var on=false;el.style.touchAction='none';el.style.cursor='crosshair';
+ el.addEventListener('pointerdown',function(e){on=true;try{el.setPointerCapture(e.pointerId)}catch(x){}fn(svgXY(e,el))});
+ el.addEventListener('pointermove',function(e){if(on)fn(svgXY(e,el))});
+ el.addEventListener('pointerup',function(){on=false});el.addEventListener('pointercancel',function(){on=false})}
+function makeAnim(render,maxFn,spFn,playBtn){var A={u:maxFn(),target:maxFn(),raf:null,last:0,play:false};
+ function btn(){playBtn.textContent=A.play?'Pausar':'Reproducir'}
+ function tick(ts){var dt=Math.min((ts-A.last)/1000,0.05);A.last=ts;var mx=maxFn();var tg=Math.min(A.target,mx);
+  if(A.u<tg)A.u=Math.min(tg,A.u+dt*spFn());render();
+  if(A.u<tg-1e-9){A.raf=requestAnimationFrame(tick)}else{A.raf=null;if(A.play&&A.u>=mx-1e-9)A.play=false;btn()}}
+ function go(){if(!A.raf){A.last=performance.now();A.raf=requestAnimationFrame(tick)}}
+ A.step=function(){A.play=false;var mx=maxFn();if(A.u>=mx-1e-9){A.u=0;A.target=0}var base=Math.floor(Math.max(A.target,A.u)+1e-9);if(A.target-A.u>1e-9)base=Math.floor(A.target+1e-9);A.target=Math.min(mx,base+1);btn();go()};
+ A.toggle=function(){var mx=maxFn();if(A.play){A.play=false;A.target=Math.ceil(A.u-1e-9);btn();go();return}if(A.u>=mx-1e-9)A.u=0;A.play=true;A.target=mx;btn();go()};
+ A.reset=function(){A.play=false;A.u=0;A.target=0;if(A.raf){cancelAnimationFrame(A.raf);A.raf=null}btn();render()};
+ A.full=function(){A.play=false;if(A.raf){cancelAnimationFrame(A.raf);A.raf=null}A.u=maxFn();A.target=A.u;btn();render()};
+ A.fit=function(){var mx=maxFn();A.u=Math.min(A.u,mx);A.target=Math.min(A.target,mx)};
+ return A}
+/* ---------- primer orden ---------- */
+function classify1(A,B){if(Math.abs(A-1)<1e-9)return B===0?['Constante','var(--warn)']:['Crecimiento lineal (no hay equilibrio)','var(--bad)'];
+ if(A>1)return['Monótona explosiva','var(--bad)'];if(A>0)return['Monótona convergente','var(--good)'];
+ if(Math.abs(A)<1e-9)return['Converge en un paso','var(--good)'];
+ if(A>-1+1e-9&&Math.abs(A+1)>=1e-9)return['Oscilación amortiguada','var(--good)'];
+ if(Math.abs(A+1)<1e-9)return['Oscilación uniforme','var(--warn)'];return['Oscilación explosiva','var(--bad)']}
+function strip1(id,A,lo,hi,labels){var el=$(id);var W=680,H=74,L=14,R=14;var X=function(v){return L+(v-lo)/(hi-lo)*(W-L-R)};
+ var o='';var zs=labels||[[lo,-1,'oscilación explosiva','var(--bad)'],[-1,0,'oscilación amortiguada','var(--good)'],[0,1,'monótona amortiguada','var(--good)'],[1,hi,'monótona explosiva','var(--bad)']];
+ zs.forEach(function(z,i){o+='<rect x="'+X(z[0])+'" y="26" width="'+(X(z[1])-X(z[0]))+'" height="14" style="fill:'+z[3]+';opacity:'+(z[3]==='var(--good)'?0.35:0.22)+'"/>';
+  o+='<text x="'+((X(z[0])+X(z[1]))/2)+'" y="58" font-size="11" text-anchor="middle" '+TX+'>'+z[2]+'</text>'});
+ for(var v=Math.ceil(lo);v<=hi;v++)o+='<text x="'+X(v)+'" y="20" font-size="11" text-anchor="middle" '+TX+'>'+v+'</text><line x1="'+X(v)+'" x2="'+X(v)+'" y1="40" y2="44" '+AX+'/>';
+ var a=cl(A,lo,hi);o+='<path d="M'+X(a)+' 40 l-6 -14 h12 z" style="fill:var(--fg)"/>';el.innerHTML=o}
+/* ---------- segundo orden ---------- */
+function sim2(p,q,g,y0,y1,N){var y=[y0,y1];for(var t=2;t<=N;t++)y.push(g-p*y[t-1]-q*y[t-2]);return y}
+function roots2(p,q){var d=p*p-4*q;if(d>=0){var s=Math.sqrt(d);return{cx:false,r1:(-p+s)/2,r2:(-p-s)/2,re:-p/2,im:0,d:d,maxabs:Math.max(Math.abs((-p+s)/2),Math.abs((-p-s)/2))}}
+ var im=Math.sqrt(-d)/2;return{cx:true,re:-p/2,im:im,d:d,maxabs:Math.sqrt(q)}}
+function classify2(p,q){var r=roots2(p,q),e=1e-9;
+ var st=(1-q>e&&1+p+q>e&&1-p+q>e)?'estable':((1-q<-e||1+p+q<-e||1-p+q<-e)?'inestable':'borde');
+ var tipo,col;
+ if(r.cx){tipo='ciclo'}else{var big=Math.abs(r.r1)>=Math.abs(r.r2)?r.r1:r.r2;tipo=big<0?'zigzag':'monótona'}
+ var th=r.cx?Math.atan2(r.im,r.re):null;
+ var txt=tipo==='ciclo'?'Ciclo':tipo==='zigzag'?'Zigzag':'Trayectoria monótona';
+ if(st==='estable'){txt+=' amortiguado';col='var(--good)'}else if(st==='borde'){txt+=' en el borde';col='var(--warn)'}else{txt+=' explosivo';col='var(--bad)'}
+ if(tipo==='monótona'){txt=st==='estable'?'Monótona convergente':st==='borde'?'Monótona en el borde':'Monótona explosiva'}
+ return{r:r,st:st,tipo:tipo,th:th,T:th?2*Math.PI/th:null,txt:txt,col:col}}
+function fmtRoots(r){if(r.cx)return F(r.re,3)+' ± '+F(r.im,3)+' i';return F(r.r1,3)+' ; '+F(r.r2,3)}
+function argand(id,p,q){var r=roots2(p,q);var m=Math.max(1.5,r.maxabs*1.18);var f=frame(300,300,22,22,16,22,-m,m,-m,m);var o='';
+ var cx=f.X(0),cy=f.Y(0),rad=f.X(1)-f.X(0);
+ o+='<circle cx="'+cx+'" cy="'+cy+'" r="'+rad+'" style="fill:var(--okfill);stroke:var(--line2)" stroke-width="1.5"/>';
+ o+='<line x1="'+f.L+'" x2="'+(f.L+f.w)+'" y1="'+cy+'" y2="'+cy+'" '+AX+'/><line x1="'+cx+'" x2="'+cx+'" y1="'+f.T+'" y2="'+(f.T+f.h)+'" '+AX+'/>';
+ [-1,1].forEach(function(v){o+='<text x="'+f.X(v)+'" y="'+(cy+14)+'" font-size="11" text-anchor="middle" '+TX+'>'+v+'</text>'});
+ o+='<text x="'+(f.L+f.w)+'" y="'+(cy-5)+'" font-size="11" text-anchor="end" '+TX+'>Re</text><text x="'+(cx+5)+'" y="'+(f.T+10)+'" font-size="11" '+TX+'>Im</text>';
+ var pts=r.cx?[[r.re,r.im],[r.re,-r.im]]:[[r.r1,0],[r.r2,0]];
+ pts.forEach(function(pt){var mod=Math.hypot(pt[0],pt[1]);var c=mod<1-1e-9?'var(--good)':mod>1+1e-9?'var(--bad)':'var(--warn)';
+  o+='<circle cx="'+f.X(pt[0])+'" cy="'+f.Y(pt[1])+'" r="6" stroke-width="2" style="fill:'+c+';stroke:var(--surface)"/>'});
+ $(id).innerHTML=o}
+
+function trunc(pts,lo,hi){var s=hi-lo,o=[];for(var i=0;i<pts.length;i++){o.push(pts[i]);if(pts[i][1]<lo-s||pts[i][1]>hi+s)break}return o}
+
+
+var N=14;
+function prm(){return{al:+$('al').value,ga:+$('ga').value,be:+$('be').value,de:+$('de').value,sg:+$('sg').value,d:+$('d').value}}
+function updSigma(keep){var s=prm(),mx=3/(s.be+s.de);var e=$('sg');var t=+e.value/(+e.max||mx);e.max=mx;e.step=mx/150;if(!keep)e.value=cl(t*mx,mx/150,mx);setv('sg',+e.value)}
+function model(p){var b=p.be+p.de,Ps=(p.al+p.ga)/b,A=1-p.sg*b,B=p.sg*(p.al+p.ga);var P=[Ps+p.d];for(var t=0;t<N;t++)P.push(A*P[t]+B);
+ var dI=P.map(function(v){return b*v-(p.al+p.ga)});return{b:b,Ps:Ps,A:A,P:P,dI:dI,s:p.sg*b}}
+var An=makeAnim(render,function(){return N},function(){return +$('sp').value},$('pl'));
+function render(){
+ var p=prm(),m=model(p),u=An.u,k=Math.min(Math.floor(u+1e-9),N),fr=u-k;
+ var Pk=m.P[k]+(k<N?(m.P[k+1]-m.P[k])*cl(fr*2-1,0,1):0);
+ /* mercado */
+ var Pmax=p.al/p.be*1.08,Qmax=p.al*1.05;var f=frame(420,300,46,14,12,30,0,Qmax,0,Pmax);
+ var o=clip('cA',f)+axes(f,{xt:ticks(0,Qmax,5),yt:ticks(0,Pmax,5),xl:'Q',yl:'P'});
+ o+='<g clip-path="url(#cA)">';
+ o+='<line x1="'+f.X(0)+'" y1="'+f.Y(p.al/p.be)+'" x2="'+f.X(p.al)+'" y2="'+f.Y(0)+'" style="stroke:var(--demand)" stroke-width="2.5"/>';
+ o+='<line x1="'+f.X(0)+'" y1="'+f.Y(p.ga/p.de)+'" x2="'+f.X(Qmax)+'" y2="'+f.Y((Qmax+p.ga)/p.de)+'" style="stroke:var(--supply)" stroke-width="2.5"/>';
+ var qd=p.al-p.be*Pk,qs=-p.ga+p.de*Pk;
+ o+='<rect x="'+f.X(Math.min(qd,qs))+'" y="'+(f.Y(Pk)-4)+'" width="'+Math.abs(f.X(qs)-f.X(qd))+'" height="8" style="fill:'+(qs>qd?'var(--demand)':'var(--supply)')+';opacity:.35"/>';
+ o+='<line x1="'+f.L+'" x2="'+(f.L+f.w)+'" y1="'+f.Y(Pk)+'" y2="'+f.Y(Pk)+'" style="stroke:var(--faint)" stroke-dasharray="3 3"/>';
+ for(var j=0;j<=k;j++)o+='<circle cx="'+f.L+'" cy="'+f.Y(m.P[j])+'" r="3" style="fill:var(--fg)"/>';
+ o+='<circle cx="'+f.X(qd)+'" cy="'+f.Y(Pk)+'" r="5" style="fill:var(--demand);stroke:var(--surface)" stroke-width="2"/><circle cx="'+f.X(qs)+'" cy="'+f.Y(Pk)+'" r="5" style="fill:var(--supply);stroke:var(--surface)" stroke-width="2"/>';
+ o+='<circle cx="'+f.X(p.al-p.be*m.Ps)+'" cy="'+f.Y(m.Ps)+'" r="4.5" style="fill:var(--fg)"/>';
+ o+='</g><text x="'+(f.X(p.al)-6)+'" y="'+(f.Y(0)-8)+'" font-size="13" font-weight="600" text-anchor="end" style="fill:var(--demand)">D</text>';
+ o+='<text x="'+(f.L+f.w-18)+'" y="'+(f.T+14)+'" font-size="13" font-weight="600" style="fill:var(--supply)">S</text>';
+ $('c1').innerHTML=o;
+ $('gap').textContent=(qs>qd+1e-6?'Exceso de oferta: ':qs<qd-1e-6?'Exceso de demanda: ':'Mercado en equilibrio: ')+F(Math.abs(qs-qd),2)+' unidades';
+ /* precio */
+ var vis=[];for(var j=0;j<=k;j++)vis.push([j,m.P[j]]);var tp=m.P[k];if(k<N&&fr>1e-6){tp=Pk;vis.push([k+fr,Pk])}
+ var yr=yrange(vis.map(function(z){return z[1]}).concat([m.Ps]),0.12);var f2=frame(680,210,50,16,12,28,0,N,yr[0],yr[1]);
+ var q=clip('cB',f2)+axes(f2,{xt:ticks(0,N,8),yt:ticks(yr[0],yr[1],4),xl:'t',yl:sb('P','t')});
+ q+='<g clip-path="url(#cB)">'+hl(f2,m.Ps,'P* = '+F(m.Ps,2))+poly(f2,vis,'var(--demand)',2.4,3.5)+'</g>';if(k<N&&fr>1e-6)q+=tip(f2,k+fr,Pk,'var(--demand)');
+ $('c2').innerHTML=q;
+ /* inventario */
+ var dv=m.dI.slice(0,k+1);var mxv=Math.max(1,Math.max.apply(null,dv.map(Math.abs)))*1.15;
+ var f3=frame(680,170,50,16,10,28,-0.5,N+0.5,-mxv,mxv);var r=axes(f3,{xt:ticks(0,N,8),yt:[-mxv/1.15,0,mxv/1.15],xl:'t',yf:function(v){return F(v,1)}});
+ r+='<line x1="'+f3.L+'" x2="'+(f3.L+f3.w)+'" y1="'+f3.Y(0)+'" y2="'+f3.Y(0)+'" '+AX+'/>';
+ var bw=f3.w/(N+1)*0.65;dv.forEach(function(v,j){var y0=f3.Y(Math.max(v,0)),h=Math.abs(f3.Y(v)-f3.Y(0));r+='<rect x="'+(f3.X(j)-bw/2)+'" y="'+y0+'" width="'+bw+'" height="'+h+'" style="fill:'+(v>0?'var(--demand)':'var(--supply)')+';opacity:.8"/>'});
+ $('c3').innerHTML=r;
+ strip1('c4',m.s,0,3,[[0,1,'monótona amortiguada','var(--good)'],[1,2,'oscilación amortiguada','var(--good)'],[2,3,'oscilación explosiva','var(--bad)']]);
+ var c=classify1(m.A,1);var tt=$('vT');tt.textContent=c[0];tt.style.color=c[1];
+ $('vA').textContent=F(m.A,3);$('vP').textContent=F(m.Ps,3);$('vs').textContent=F(m.s,2)+' (σ = '+F(p.sg,3)+')';$('vt').textContent=k+' · '+F(m.P[k],3);
+ var neg=m.P.slice(0,k+1).some(function(v){return v<0});$('msg').textContent=neg?'El precio resulta negativo: el modelo lineal deja de tener sentido.':''}
+function pre(s){updSigma(true);var b=(+$('be').value)+(+$('de').value);setv('sg',s/b);An.full()}
+$('b1').onclick=function(){pre(0.5)};$('b2').onclick=function(){pre(1.5)};$('b3').onclick=function(){pre(2)};$('b4').onclick=function(){pre(2.5)};
+$('step').onclick=An.step;$('pl').onclick=An.toggle;$('rs').onclick=An.reset;
+bindSliders(['al','ga','be','de','sg','d','sp'],function(id){if(id==='be'||id==='de')updSigma(false);An.fit();render()});
+updSigma(true);setv('sg',1.5/3);An.full();
+
+</script>

@@ -1,0 +1,227 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}.volver{font-size:13px;color:var(--muted);text-decoration:none}.volver:hover{color:var(--fg);text-decoration:underline}
+</style></head><body>
+<title>MODELO DE TELARAÑA</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap">
+<style>
+/* Layout: barra de acciones arriba, gráficos a la izquierda, parámetros y datos a la derecha (se apila en pantallas angostas) */
+:root{
+  --bg:#f4f5f7;--surface:#ffffff;--fg:#1a1f26;--muted:#56606c;--faint:#8a94a0;
+  --line:#dde1e6;--line2:#b9c0c9;--demand:#d4521a;--supply:#2461b5;
+  --good:#17703d;--warn:#8f6200;--bad:#b3261e;--chip:#eceff3;
+  --display:"Newsreader",Georgia,"Times New Roman",serif;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#101318;--surface:#171b21;--fg:#e9ecf0;--muted:#a3adb9;--faint:#76808c;
+  --line:#2a3039;--line2:#434b57;--demand:#f27a45;--supply:#6aa4f2;
+  --good:#58c88a;--warn:#e0b04a;--bad:#f2837b;--chip:#222831;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#101318;--surface:#171b21;--fg:#e9ecf0;--muted:#a3adb9;--faint:#76808c;
+  --line:#2a3039;--line2:#434b57;--demand:#f27a45;--supply:#6aa4f2;
+  --good:#58c88a;--warn:#e0b04a;--bad:#f2837b;--chip:#222831;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:15px;line-height:1.5;
+  padding-block:20px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+h1{font-family:var(--display);font-weight:600;font-size:clamp(26px,4vw,36px);line-height:1.15;margin:0;text-wrap:balance}
+.sub{color:var(--muted);margin:4px 0 0;font-size:14px}
+.eq{display:flex;flex-wrap:wrap;gap:8px 22px;font-family:var(--mono);font-size:14px;margin-top:10px;color:var(--fg)}
+.eq span{background:var(--chip);padding:4px 10px;border-radius:6px;white-space:nowrap}
+.bar{display:flex;flex-wrap:wrap;gap:10px 12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.bar .sep{width:1px;align-self:stretch;background:var(--line)}
+.bar .lbl{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+button{font:inherit;font-weight:500;color:var(--fg);background:var(--surface);border:1px solid var(--line2);border-radius:8px;padding:7px 13px;cursor:pointer}
+button:hover{background:var(--chip)}
+button:focus-visible,input:focus-visible{outline:2px solid var(--supply);outline-offset:2px}
+button.go{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+button.go:hover{opacity:.88;background:var(--fg)}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:16px;align-items:start}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px}
+.charts{display:flex;flex-direction:column;gap:12px;min-width:0}
+.side{display:flex;flex-direction:column;gap:16px;min-width:0}
+h2{font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:0 0 10px}
+.ctl{display:flex;flex-direction:column;gap:2px;margin-bottom:10px}
+.ctl label{display:flex;justify-content:space-between;font-size:14px;color:var(--muted)}
+.ctl output{font-family:var(--mono);color:var(--fg);font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:var(--supply)}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{background:var(--chip);border-radius:8px;padding:8px 10px;min-width:0}
+.stat.w{grid-column:1/-1}
+.stat .l{font-size:12px;color:var(--muted)}
+.stat .v{font-family:var(--mono);font-size:18px;font-weight:500;font-variant-numeric:tabular-nums}
+#msg{font-size:14px;color:var(--bad);min-height:21px}
+svg{display:block;width:100%;height:auto}
+svg text{font-family:var(--sans)}
+.leg{display:flex;gap:16px;font-size:13px;color:var(--muted);margin-bottom:6px;flex-wrap:wrap}
+.leg i{display:inline-block;width:18px;height:3px;border-radius:2px;vertical-align:middle;margin-right:6px}
+@media (max-width:860px){.layout{grid-template-columns:minmax(0,1fr)}.bar .sep{display:none}}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+</style>
+
+<div class="wrap">
+<a class="volver" href="index.html">← Laboratorio de modelos discretos</a>
+  <header>
+    <h1>Modelo de la telaraña</h1>
+    <p class="sub">Matemática Aplicada II · Ecuaciones en diferencias</p>
+    <div class="eq">
+      <span>Q<sup>d</sup><sub>t</sub> = α − β·P<sub>t</sub></span>
+      <span>Q<sup>s</sup><sub>t</sub> = −γ + δ·P<sub>t−1</sub></span>
+      <span>P<sub>t+1</sub> = (α+γ)/β − (δ/β)·P<sub>t</sub></span>
+    </div>
+  </header>
+
+  <div class="bar">
+    <span class="lbl">Casos</span>
+    <button type="button" id="p1">Convergente (δ&lt;β)</button>
+    <button type="button" id="p2">Uniforme (δ=β)</button>
+    <button type="button" id="p3">Explosivo (δ&gt;β)</button>
+    <span class="sep"></span>
+    <button type="button" class="go" id="step">Siguiente paso</button>
+    <button type="button" class="go" id="pl">Reproducir</button>
+    <button type="button" id="rs">Reiniciar</button>
+  </div>
+
+  <div class="layout">
+    <div class="charts">
+      <div class="card">
+        <div class="leg"><span><i style="background:var(--demand)"></i>Demanda D</span><span><i style="background:var(--supply)"></i>Oferta S</span><span><i style="background:var(--fg)"></i>Trayectoria</span></div>
+        <svg id="c1" viewBox="0 0 680 380" role="img" aria-label="Diagrama de telaraña: curvas de oferta y demanda con la trayectoria del precio"></svg>
+      </div>
+      <div class="card">
+        <svg id="c2" viewBox="0 0 680 150" role="img" aria-label="Precio en función del tiempo"></svg>
+      </div>
+    </div>
+    <aside class="side">
+      <div class="card">
+        <h2>Resultados</h2>
+        <div class="stats">
+          <div class="stat"><div class="l">A = −δ/β</div><div class="v" id="vA"></div></div>
+          <div class="stat"><div class="l">P* = (α+γ)/(β+δ)</div><div class="v" id="vP"></div></div>
+          <div class="stat w"><div class="l">Trayectoria</div><div class="v" id="vT" style="font-family:var(--sans);font-size:16px;font-weight:600"></div></div>
+          <div class="stat w"><div class="l">Período t · precio P<sub>t</sub></div><div class="v" id="vt"></div></div>
+        </div>
+        <div id="msg" role="status"></div>
+      </div>
+      <div class="card">
+        <h2>Parámetros</h2>
+        <div class="ctl"><label for="al">α (demanda) <output id="o_al"></output></label><input type="range" id="al" min="6" max="20" step="0.5" value="10"></div>
+        <div class="ctl"><label for="ga">γ (oferta) <output id="o_ga"></output></label><input type="range" id="ga" min="0" max="6" step="0.5" value="2"></div>
+        <div class="ctl"><label for="be">β (pendiente de D) <output id="o_be"></output></label><input type="range" id="be" min="0.5" max="4" step="0.1" value="2"></div>
+        <div class="ctl"><label for="de">δ (pendiente de S) <output id="o_de"></output></label><input type="range" id="de" min="0.5" max="4" step="0.1" value="1"></div>
+        <div class="ctl"><label for="d">P₀ − P* <output id="o_d"></output></label><input type="range" id="d" min="-2" max="3" step="0.1" value="1"></div>
+        <div class="ctl" style="margin-bottom:0"><label for="sp">Velocidad <output id="o_sp"></output></label><input type="range" id="sp" min="0.3" max="3" step="0.1" value="0.8"></div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script>
+var $=function(i){return document.getElementById(i)};
+var MAX=14;
+var A={u:0,target:0,raf:null,last:0,play:false};
+function F(x){return x.toLocaleString('es-AR',{maximumFractionDigits:2})}
+function sb(b,k){return b+'<tspan dy="3" font-size="10">'+k+'</tspan>'}
+function cl(x,a,b){return Math.max(a,Math.min(b,x))}
+function prm(){return{al:+$('al').value,ga:+$('ga').value,be:+$('be').value,de:+$('de').value,d:+$('d').value}}
+function sim(p){var Ps=(p.al+p.ga)/(p.be+p.de);var P=[Math.max(0,Ps+p.d)],Q=[null],msg='';
+for(var k=0;k<MAX;k++){var q=-p.ga+p.de*P[k];if(q<0){msg='La cantidad ofrecida resulta negativa: el modelo lineal deja de tener sentido.';break}
+var pn=(p.al-q)/p.be;if(pn<0){msg='El precio resulta negativo: el modelo lineal deja de tener sentido.';break}
+Q.push(q);P.push(pn)}
+return{P:P,Q:Q,Ps:Ps,msg:msg,vmax:P.length-1}}
+var TX='style="fill:var(--muted)"',TXF='style="fill:var(--fg)"',AX='style="stroke:var(--line2)"';
+function render(){
+var p=prm();var s=sim(p);var P=s.P,Q=s.Q;
+A.u=cl(A.u,0,s.vmax);
+var u=A.u,k=Math.min(Math.floor(u+1e-9),s.vmax),f=u-k;
+$('o_al').textContent=F(p.al);$('o_ga').textContent=F(p.ga);$('o_be').textContent=F(p.be);$('o_de').textContent=F(p.de);$('o_d').textContent=F(p.d);$('o_sp').textContent=F(+$('sp').value);
+var r=p.de/p.be;
+$('vA').textContent=F(-r);$('vP').textContent=F(s.Ps);
+var tt=$('vT');
+if(Math.abs(r-1)<0.005){tt.textContent='Oscilación uniforme';tt.style.color='var(--warn)'}
+else if(r<1){tt.textContent='Oscilación amortiguada';tt.style.color='var(--good)'}
+else{tt.textContent='Oscilación explosiva';tt.style.color='var(--bad)'}
+$('vt').textContent=k+' · '+F(P[k]);
+$('msg').textContent=(u>=s.vmax-1e-9&&s.vmax<MAX)?s.msg:'';
+var W=680,H=380,L=46,R=16,T=14,B=34,w=W-L-R,h=H-T-B;
+var xm=Math.max(p.al/p.be,P[0])*1.04,ym=p.al*1.04;
+var X=function(v){return L+v/xm*w},Y=function(v){return T+h-v/ym*h};
+var o='<defs><clipPath id="cp"><rect x="'+L+'" y="'+T+'" width="'+w+'" height="'+h+'"/></clipPath><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 1L9 5L0 9z" style="fill:var(--fg)"/></marker></defs>';
+o+='<line x1="'+L+'" y1="'+(T+h)+'" x2="'+(L+w)+'" y2="'+(T+h)+'" '+AX+'/>';
+o+='<line x1="'+L+'" y1="'+T+'" x2="'+L+'" y2="'+(T+h)+'" '+AX+'/>';
+o+='<text x="'+(L+w-4)+'" y="'+(T+h+28)+'" font-size="13" text-anchor="end" '+TX+'>P</text>';
+o+='<text x="'+(L-34)+'" y="'+(T+10)+'" font-size="13" '+TX+'>Q</text>';
+o+='<g clip-path="url(#cp)">';
+o+='<line x1="'+X(0)+'" y1="'+Y(p.al)+'" x2="'+X(p.al/p.be)+'" y2="'+Y(0)+'" style="stroke:var(--demand)" stroke-width="2.5"/>';
+o+='<line x1="'+X(p.ga/p.de)+'" y1="'+Y(0)+'" x2="'+X(xm)+'" y2="'+Y(-p.ga+p.de*xm)+'" style="stroke:var(--supply)" stroke-width="2.5"/>';
+var qs=p.al-p.be*s.Ps;
+o+='<line x1="'+L+'" y1="'+Y(qs)+'" x2="'+X(s.Ps)+'" y2="'+Y(qs)+'" '+AX+' stroke-dasharray="4 4"/>';
+o+='<line x1="'+X(s.Ps)+'" y1="'+Y(qs)+'" x2="'+X(s.Ps)+'" y2="'+(T+h)+'" '+AX+' stroke-dasharray="4 4"/>';
+var tipx=X(P[0]),tipy=Y(0);
+function seg(x1,y1,x2,y2){var len=Math.abs(x2-x1)+Math.abs(y2-y1);if(len<0.5)return'';
+return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'"'+(len>9?' marker-end="url(#ar)"':'')+' style="stroke:var(--fg)" stroke-width="1.8"/>'}
+for(var j=0;j<=k&&j<P.length-1;j++){
+var fv=j<k?1:cl(f*2,0,1),fh=j<k?1:cl(f*2-1,0,1);
+var y0=j==0?0:Q[j];
+var yv=y0+(Q[j+1]-y0)*fv;
+o+=seg(X(P[j]),Y(y0),X(P[j]),Y(yv));
+tipx=X(P[j]);tipy=Y(yv);
+if(fh>0){var xh=P[j]+(P[j+1]-P[j])*fh;o+=seg(X(P[j]),Y(Q[j+1]),X(xh),Y(Q[j+1]));tipx=X(xh);tipy=Y(Q[j+1])}}
+o+='<circle cx="'+X(s.Ps)+'" cy="'+Y(qs)+'" r="4.5" style="fill:var(--fg)"/>';
+o+='<circle cx="'+tipx+'" cy="'+tipy+'" r="5.5" stroke-width="2" style="fill:var(--demand);stroke:var(--surface)"/>';
+o+='</g>';
+o+='<text x="'+(X(s.Ps)+8)+'" y="'+(Y(qs)-8)+'" font-size="13" '+TXF+'>E*</text>';
+o+='<text x="'+(X(0)+8)+'" y="'+(Y(p.al)+16)+'" font-size="13" font-weight="600" style="fill:var(--demand)">D</text>';
+o+='<text x="'+(L+w-18)+'" y="'+(T+14)+'" font-size="13" font-weight="600" style="fill:var(--supply)">S</text>';
+var used=[];
+function lab(v,txt,isx){var pos=isx?X(v):Y(v);for(var i=0;i<used.length;i++){if(Math.abs(used[i]-pos)<16)return}used.push(pos);
+if(isx)o+='<text x="'+pos+'" y="'+(T+h+16)+'" font-size="12" text-anchor="middle" '+TX+'>'+txt+'</text>';
+else o+='<text x="'+(L-6)+'" y="'+(pos+4)+'" font-size="12" text-anchor="end" '+TX+'>'+txt+'</text>'}
+used=[X(s.Ps)];
+o+='<text x="'+X(s.Ps)+'" y="'+(T+h+16)+'" font-size="12" text-anchor="middle" '+TXF+'>P*</text>';
+for(var j=0;j<=k&&j<=6;j++){if(P[j]>=0&&P[j]<=xm)lab(P[j],sb('P',j),true)}
+used=[Y(qs)];
+o+='<text x="'+(L-6)+'" y="'+(Y(qs)+4)+'" font-size="12" text-anchor="end" '+TXF+'>Q*</text>';
+var qn=Math.min(Math.floor(u+0.5+1e-9),s.vmax);
+for(var j=1;j<=qn&&j<=6;j++){if(Q[j]>=0&&Q[j]<=ym)lab(Q[j],sb('Q',j),false)}
+$('c1').innerHTML=o;
+var W2=680,H2=150,L2=46,R2=16,T2=12,B2=26,w2=W2-L2-R2,h2=H2-T2-B2;
+var vals=P.slice(0,Math.min(k+2,P.length)).concat([s.Ps]);var lo=Math.min.apply(null,vals),hi=Math.max.apply(null,vals);
+if(hi-lo<0.5){hi+=0.25;lo-=0.25}var pd=(hi-lo)*0.12;lo-=pd;hi+=pd;
+var X2=function(t){return L2+t/MAX*w2},Y2=function(v){return T2+h2-(v-lo)/(hi-lo)*h2};
+var q='<line x1="'+L2+'" y1="'+(T2+h2)+'" x2="'+(L2+w2)+'" y2="'+(T2+h2)+'" '+AX+'/>';
+q+='<line x1="'+L2+'" y1="'+T2+'" x2="'+L2+'" y2="'+(T2+h2)+'" '+AX+'/>';
+q+='<line x1="'+L2+'" y1="'+Y2(s.Ps)+'" x2="'+(L2+w2)+'" y2="'+Y2(s.Ps)+'" '+AX+' stroke-dasharray="4 4"/>';
+q+='<text x="'+(L2-6)+'" y="'+(Y2(s.Ps)+4)+'" font-size="12" text-anchor="end" '+TXF+'>P*</text>';
+q+='<text x="'+(L2+w2)+'" y="'+(T2+h2+20)+'" font-size="12" text-anchor="end" '+TX+'>t</text>';
+for(var t=0;t<=MAX;t+=2)q+='<text x="'+X2(t)+'" y="'+(T2+h2+16)+'" font-size="11" text-anchor="middle" style="fill:var(--faint)">'+t+'</text>';
+var pv=[];for(var j=0;j<=k;j++)pv.push([j,P[j]]);
+var ptip=P[k];
+if(k<s.vmax){var fh2=cl(f*2-1,0,1);ptip=P[k]+(P[k+1]-P[k])*fh2;pv.push([k+f,ptip])}
+var pts=pv.map(function(a){return X2(a[0])+','+Y2(a[1])}).join(' ');
+if(pv.length>1)q+='<polyline points="'+pts+'" fill="none" style="stroke:var(--demand)" stroke-width="2" stroke-linejoin="round"/>';
+for(var j=0;j<=k;j++)q+='<circle cx="'+X2(j)+'" cy="'+Y2(P[j])+'" r="3.5" style="fill:var(--demand)"/>';
+if(f>1e-6&&k<s.vmax)q+='<circle cx="'+X2(k+f)+'" cy="'+Y2(ptip)+'" r="5.5" stroke-width="2" style="fill:var(--demand);stroke:var(--surface)"/>';
+q+='<text x="'+(L2+4)+'" y="'+(T2+10)+'" font-size="12" '+TX+'>'+sb('P','t')+'</text>';
+$('c2').innerHTML=q}
+function tick(ts){
+var dt=Math.min((ts-A.last)/1000,0.05);A.last=ts;
+var vmax=sim(prm()).vmax;var tg=Math.min(A.target,vmax);
+if(A.u<tg)A.u=Math.min(tg,A.u+dt*(+$('sp').value));
+render();
+if(A.u<tg-1e-9){A.raf=requestAnimationFrame(tick)}
+else{A.raf=null;if(A.play&&A.u>=vmax-1e-9){A.play=false}$('pl').textContent=A.play?'Pausar':'Reproducir'}}
+function go(){if(!A.raf){A.last=performance.now();A.raf=requestAnimationFrame(tick)}}
+function stp(){A.play=false;$('pl').textContent='Reproducir';var base=Math.floor(Math.max(A.target,A.u)+1e-9);if(A.target-A.u>1e-9)base=Math.floor(A.target+1e-9);A.target=Math.min(MAX,base+1);go()}
+function play(){if(A.play){A.play=false;A.target=Math.min(MAX,Math.ceil(A.u*2-1e-9)/2);$('pl').textContent='Reproducir';go();return}
+var vmax=sim(prm()).vmax;if(A.u>=vmax-1e-9||A.u>=MAX){A.u=0}A.play=true;A.target=MAX;$('pl').textContent='Pausar';go()}
+function rst(){A.play=false;A.u=0;A.target=0;if(A.raf){cancelAnimationFrame(A.raf);A.raf=null}$('pl').textContent='Reproducir';render()}
+function pre(b,d,dev){$('al').value=10;$('ga').value=2;$('be').value=b;$('de').value=d;$('d').value=dev;rst()}
+$('p1').onclick=function(){pre(2,1,1)};$('p2').onclick=function(){pre(1.5,1.5,1)};$('p3').onclick=function(){pre(1,2,0.4)};
+$('step').onclick=stp;$('pl').onclick=play;$('rs').onclick=rst;
+['al','ga','be','de','d','sp'].forEach(function(i){$(i).addEventListener('input',function(){var vm=sim(prm()).vmax;A.target=Math.min(A.target,vm);render()})});
+render();
+</script>
+
+</body></html>
