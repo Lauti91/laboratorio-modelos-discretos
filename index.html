@@ -1,67 +1,292 @@
 <!doctype html>
 <html lang="es">
+<head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<style>:root{color-scheme:light}html{background:#f4f5f7}body{margin:0}</style>
 <title>Laboratorio de modelos discretos</title>
-<meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap">
+<meta name="description" content="Simuladores interactivos de ecuaciones en diferencias para Matemática Aplicada II: primer orden, segundo orden y macroeconomía dinámica.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' aria-hidden='true'%3E%3Crect x='1' y='1' width='30' height='30' rx='8' fill='%2315202b' stroke='%23ffffff' stroke-opacity='.18'/%3E%3Cpath d='M7 25 L25 7' stroke='%236aa4f2' stroke-width='1.6'/%3E%3Cpath d='M7 9 L25 23' stroke='%23f27a45' stroke-width='1.6'/%3E%3Cpath d='M10 25 V11.3 H18.6 V17.8 H13.8 V14.2 H16.4' fill='none' stroke='%23ffb066' stroke-width='1.8' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;1,6..72,500&family=STIX+Two+Text:ital@0;1&display=swap">
 <style>
-/* Layout: índice en dos bloques (primer y segundo orden), tarjetas-enlace en grilla */
-:root{--bg:#f4f5f7;--surface:#ffffff;--fg:#1a1f26;--muted:#56606c;--line:#e3e6ea;--line2:#b9c0c9;--accent:#d4521a;--chip:#eceff3;
---display:"Newsreader",Georgia,serif;--sans:"IBM Plex Sans",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,Menlo,monospace}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#101318;--surface:#171b21;--fg:#e9ecf0;--muted:#a3adb9;--line:#262c35;--line2:#434b57;--accent:#f27a45;--chip:#222831;color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#101318;--surface:#171b21;--fg:#e9ecf0;--muted:#a3adb9;--line:#262c35;--line2:#434b57;--accent:#f27a45;--chip:#222831;color-scheme:dark}
+/* Laboratorio de modelos discretos: papel milimetrado, tinta azul oscura, ámbar de la cátedra.
+   Display: Newsreader · Texto: IBM Plex Sans · Lecturas numéricas: IBM Plex Mono · Matemática: MathJax / STIX Two */
+:root{
+  --bg:#f5f6f8;--grid:rgba(36,97,181,.055);--grid2:rgba(36,97,181,.09);
+  --surface:#ffffff;--surface2:#fafbfc;--fg:#15202b;--muted:#536070;--faint:#8a94a1;
+  --line:#e0e4ea;--line2:#b7c0cb;
+  --accent:#b85400;--accent-hi:#ff7d00;--accent-soft:#fff2e5;--accent-ink:#ffffff;
+  --demand:#d4521a;--supply:#2461b5;--c3:#6b3fa0;
+  --good:#17703d;--warn:#8f6200;--bad:#b3261e;--chip:#eef1f5;
+  --zone1:#f7dcc9;--zone2:#f0b98f;--okfill:#e3f1e8;
+  --shadow:0 1px 2px rgba(21,32,43,.05),0 4px 14px rgba(21,32,43,.04);
+  --display:"Newsreader",Georgia,"Times New Roman",serif;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --math:"STIX Two Text","Times New Roman",serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0e1217;--grid:rgba(106,164,242,.05);--grid2:rgba(106,164,242,.085);
+  --surface:#161b22;--surface2:#1a2029;--fg:#e8ecf1;--muted:#a3adba;--faint:#76808d;
+  --line:#262d37;--line2:#434c58;
+  --accent:#ff9b45;--accent-hi:#ff9b45;--accent-soft:#2c2116;--accent-ink:#1a0f04;
+  --demand:#f27a45;--supply:#6aa4f2;--c3:#b595e8;
+  --good:#58c88a;--warn:#e0b04a;--bad:#f2837b;--chip:#202731;
+  --zone1:#4a3022;--zone2:#7a4a2a;--okfill:#1f3a2b;
+  --shadow:0 1px 2px rgba(0,0,0,.3);color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e1217;--grid:rgba(106,164,242,.05);--grid2:rgba(106,164,242,.085);
+  --surface:#161b22;--surface2:#1a2029;--fg:#e8ecf1;--muted:#a3adba;--faint:#76808d;
+  --line:#262d37;--line2:#434c58;
+  --accent:#ff9b45;--accent-hi:#ff9b45;--accent-soft:#2c2116;--accent-ink:#1a0f04;
+  --demand:#f27a45;--supply:#6aa4f2;--c3:#b595e8;
+  --good:#58c88a;--warn:#e0b04a;--bad:#f2837b;--chip:#202731;
+  --zone1:#4a3022;--zone2:#7a4a2a;--okfill:#1f3a2b;
+  --shadow:0 1px 2px rgba(0,0,0,.3);color-scheme:dark}
+
 *{box-sizing:border-box}
-body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:15px;line-height:1.5;padding-block:28px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-.wrap{max-width:1040px;margin:0 auto;display:flex;flex-direction:column;gap:30px}
-h1{font-family:var(--display);font-weight:600;font-size:clamp(28px,5vw,42px);line-height:1.1;margin:0;text-wrap:balance}
-.lead{color:var(--muted);margin:8px 0 0;max-width:62ch}
-.meta{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
-h2{font-family:var(--display);font-weight:600;font-size:24px;margin:0;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
-h2 small{font-family:var(--sans);font-size:13px;font-weight:400;color:var(--muted)}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px;margin-top:12px}
-.item{display:flex;flex-direction:column;gap:8px;min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;color:inherit;text-decoration:none}
-.item:hover{border-color:var(--accent)}
-.item:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.name{font-weight:600;font-size:16px}
-.eqn{background:var(--chip);border-radius:6px;padding:6px 10px;align-self:flex-start;max-width:100%;overflow-x:auto;font-size:13.5px;color:var(--fg)}
-mjx-container{margin:0 !important;color:inherit}
-.desc{color:var(--muted);font-size:14px;flex:1}
-.go{font-size:13px;font-weight:600;color:var(--accent)}
+html{background:var(--bg)}
+body{margin:0;color:var(--fg);font-family:var(--sans);font-size:15px;line-height:1.55;
+  background-color:var(--bg);
+  background-image:linear-gradient(var(--grid2) 1px,transparent 1px),linear-gradient(90deg,var(--grid2) 1px,transparent 1px),
+    linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:120px 120px,120px 120px,24px 24px,24px 24px;background-position:-1px -1px;
+  padding-block:0 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  -webkit-font-smoothing:antialiased}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+
+/* ---------- barra superior del sitio ---------- */
+.topbar{max-width:1180px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  padding:16px 0 14px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:600;font-size:14.5px;letter-spacing:.01em}
+.brand svg{width:26px;height:26px;flex:none}
+.topbar .meta{font-size:12.5px;color:var(--muted);letter-spacing:.02em}
+
+/* ---------- simulador ---------- */
+.wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+.crumbs{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;font-size:13px;color:var(--muted);margin-top:22px}
+.crumbs a{text-decoration:none;color:var(--muted)}
+.crumbs a:hover{color:var(--fg);text-decoration:underline;text-underline-offset:3px}
+.crumbs .sl{color:var(--faint)}
+.simhead{display:flex;flex-direction:column;gap:6px}
+.kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:600}
+h1{font-family:var(--display);font-weight:600;font-size:clamp(28px,4.2vw,42px);line-height:1.08;margin:0;text-wrap:balance;letter-spacing:-.01em}
+.sub{color:var(--muted);margin:0;font-size:15px;max-width:68ch}
+.eq{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px;align-items:center}
+.eq>span{background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);padding:7px 14px;border-radius:10px;font-size:15.5px;
+  min-height:42px;display:inline-flex;align-items:center;max-width:100%;overflow-x:auto;color:var(--fg)}
+.eq>span:empty{display:none}
+mjx-container{margin:0!important}
+mjx-container[display="false"]{display:inline-block}
+
+.bar{display:flex;flex-wrap:wrap;gap:8px 8px;align-items:center;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:14px;padding:10px 12px}
+.bar .sep{display:none}
+.bar .ctrls{display:flex;flex-wrap:wrap;gap:8px;margin-left:auto}
+.bar .lbl{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-right:2px}
+button{font:inherit;font-size:13.5px;font-weight:500;color:var(--fg);background:var(--surface);border:1px solid var(--line2);border-radius:999px;padding:6px 13px;cursor:pointer;
+  transition:background .15s,border-color .15s,color .15s}
+button:hover{background:var(--chip);border-color:var(--faint)}
+button.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+button.go{border-radius:10px;padding:8px 15px;font-weight:600;font-size:14px}
+#step.go{background:var(--surface);color:var(--fg);border-color:var(--fg)}
+#step.go:hover{background:var(--chip)}
+#pl.go{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+#pl.go:hover{filter:brightness(1.08)}
+#rs{border-radius:10px;padding:8px 13px;border-color:transparent;color:var(--muted);background:transparent}
+#rs:hover{color:var(--fg);background:var(--chip)}
+
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 316px;gap:18px;align-items:start}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:var(--shadow)}
+.charts{display:flex;flex-direction:column;gap:14px;min-width:0}
+.row2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+.side{display:flex;flex-direction:column;gap:14px;min-width:0}
+h2{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:0 0 12px}
+.cap{font-size:13.5px;color:var(--muted);margin:0 0 8px}
+.ctl{display:flex;flex-direction:column;gap:4px;margin-bottom:13px}
+.ctl label{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:14px;color:var(--muted)}
+.ctl label .lt{min-width:0}
+.ctl output{font-family:var(--mono);font-size:13.5px;color:var(--fg);font-variant-numeric:tabular-nums;background:var(--chip);border-radius:6px;padding:1px 7px;flex:none}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:22px;background:transparent;margin:0;cursor:pointer}
+input[type=range]::-webkit-slider-runnable-track{height:4px;border-radius:4px;background:var(--line2)}
+input[type=range]::-moz-range-track{height:4px;border-radius:4px;background:var(--line2)}
+input[type=range]::-moz-range-progress{height:4px;border-radius:4px;background:var(--accent)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--surface);border:2px solid var(--accent);margin-top:-7px;box-shadow:0 1px 3px rgba(0,0,0,.18)}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--surface);border:2px solid var(--accent);box-shadow:0 1px 3px rgba(0,0,0,.18)}
+input[type=range]:focus-visible{outline:none}
+input[type=range]:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 4px var(--accent-soft)}
+input[type=checkbox]{width:18px;height:18px;accent-color:var(--accent)}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stat{background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:8px 10px;min-width:0}
+.stat.w{grid-column:1/-1}
+.stat .l{font-size:12.5px;color:var(--muted);line-height:1.35}
+.stat .v{font-family:var(--mono);font-size:16.5px;font-weight:500;font-variant-numeric:tabular-nums;overflow-wrap:anywhere;margin-top:2px}
+.stat .v.t{font-family:var(--sans);font-size:15.5px;font-weight:600}
+#msg{font-size:13.5px;color:var(--bad);min-height:0;margin-top:8px}
+#msg:empty{display:none}
+svg:not(mjx-container svg){display:block;width:100%;height:auto}
+svg text{font-family:var(--sans)}
+svg text.mv{font-family:var(--math);font-style:italic;font-size:15px;paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round}
+.leg{display:flex;gap:6px 18px;font-size:13px;color:var(--muted);margin-bottom:8px;flex-wrap:wrap}
+.leg i{display:inline-block;width:18px;height:3px;border-radius:2px;vertical-align:middle;margin-right:6px}
+.leg i.sq{height:10px;width:12px;border-radius:3px}
+.hint{font-size:12.5px;color:var(--faint);margin:6px 0 0}
+
+/* ---------- anterior / siguiente ---------- */
+.pager{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px}
+.pager a{display:flex;flex-direction:column;gap:2px;text-decoration:none;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow);transition:border-color .15s,transform .15s}
+.pager a:hover{border-color:var(--accent);transform:translateY(-1px)}
+.pager .d{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.pager .n{font-family:var(--display);font-size:20px;font-weight:600}
+.pager .nx{text-align:right;grid-column:2}
+.pager .pv{grid-column:1}
+.foot{max-width:1180px;margin:30px auto 0;padding-top:16px;border-top:1px solid var(--line);font-size:12.5px;color:var(--faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.foot a{color:var(--muted)}
+
+@media (max-width:900px){.layout{grid-template-columns:minmax(0,1fr)}.row2{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:560px){.pager{grid-template-columns:1fr}.pager .nx,.pager .pv{grid-column:1;text-align:left}.bar .sep{display:none}.eq>span{font-size:14px}}
+@media (max-width:620px){svg[viewBox^="0 0 680"]:not([viewBox$=" 74"]) text{font-size:23px}svg[viewBox^="0 0 680"]:not([viewBox$=" 74"]) text.mv{font-size:26px}svg[viewBox^="0 0 680"]:not([viewBox$=" 74"]) circle{r:5px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+.eq small{font-size:12.5px;color:var(--muted);margin-left:2px}
+.hf-ctl input{flex:1}
+
+
+.home{max-width:1180px;margin:0 auto}
+.hero{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:40px;align-items:center;padding:56px 0 40px}
+.display{font-family:var(--display);font-weight:600;font-size:clamp(42px,6.4vw,78px);line-height:.98;letter-spacing:-.025em;margin:14px 0 18px;text-wrap:balance}
+.display em{font-style:italic;font-weight:500;color:var(--accent)}
+.lead{font-size:17.5px;line-height:1.6;color:var(--muted);max-width:52ch;margin:0}
+.cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+.btn{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-weight:600;font-size:14.5px;border-radius:10px;padding:11px 18px;border:1px solid var(--line2);background:var(--surface);transition:transform .15s,border-color .15s,filter .15s}
+.btn:hover{border-color:var(--fg);transform:translateY(-1px)}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.pri:hover{filter:brightness(1.08)}
+.hero-fig{margin:0;padding:18px 18px 14px;display:flex;flex-direction:column;gap:10px}
+.hf-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.hf-eq{font-size:18px}
+.hf-state{font-size:13.5px;font-weight:600;padding:3px 10px;border-radius:999px;background:var(--chip)}
+.hf-ctl{display:flex;align-items:center;gap:12px}
+.hf-ctl label{font-size:14px;color:var(--muted);white-space:nowrap}
+.hf-ctl output{font-family:var(--mono);font-size:14px;background:var(--chip);border-radius:6px;padding:1px 8px;min-width:62px;text-align:center}
+.hf-chips{display:flex;flex-wrap:wrap;gap:6px}
+.hero-fig figcaption{font-size:13px;color:var(--faint)}
+.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:6px 0 26px;padding:0;list-style:none;counter-reset:s}
+.how li{counter-increment:s;display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-top:2px solid var(--fg)}
+.how li::before{content:counter(s);font-family:var(--display);font-size:30px;line-height:1;color:var(--accent);font-weight:600}
+.how b{display:block;font-size:15px}
+.how span{font-size:13.5px;color:var(--muted)}
+.group{padding:34px 0 8px;scroll-margin-top:12px}
+.ghead{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:20px;align-items:end;padding-bottom:16px;margin-bottom:18px;border-bottom:1px solid var(--line)}
+.gnum{font-family:var(--display);font-size:clamp(56px,7vw,88px);line-height:.8;font-weight:500;color:var(--accent);font-style:italic;min-width:1.1em}
+.gt{font-family:var(--display);font-size:clamp(26px,3.2vw,34px);font-weight:600;margin:4px 0 6px;text-transform:none;letter-spacing:-.01em;color:var(--fg)}
+.gtxt p{margin:0;color:var(--muted);max-width:64ch}
+.crit{display:flex;flex-direction:column;align-items:flex-end;gap:4px;padding:8px 12px;border:1px dashed var(--line2);border-radius:10px;background:var(--surface)}
+.crit .cl{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.crit .cv{font-size:15.5px}
+.cards{display:grid;grid-template-columns:minmax(0,1fr);gap:16px}
+@media (min-width:640px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (min-width:980px){.cards{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.mcard{display:flex;flex-direction:column;text-decoration:none;background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow);transition:transform .18s,border-color .18s,box-shadow .18s}
+.mcard:hover{transform:translateY(-3px);border-color:var(--accent);box-shadow:0 10px 30px rgba(21,32,43,.08)}
+.spark{background:var(--surface2);border-bottom:1px solid var(--line);
+  background-image:linear-gradient(var(--grid2) 1px,transparent 1px),linear-gradient(90deg,var(--grid2) 1px,transparent 1px);background-size:16px 16px}
+.mc-body{display:flex;flex-direction:column;gap:7px;padding:14px 16px 16px;flex:1}
+.mc-tag{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.mcard h3{font-family:var(--display);font-size:22px;font-weight:600;margin:0;line-height:1.15}
+.mc-eq{font-size:14px;max-width:100%;overflow-x:auto;overflow-y:hidden;padding:2px 0;color:var(--fg)}
+.mcard p{margin:0;font-size:14px;color:var(--muted);flex:1}
+.mc-go{font-size:13.5px;font-weight:600;color:var(--accent);margin-top:4px}
+.mcard:hover .mc-go span{display:inline-block;transform:translateX(3px);transition:transform .18s}
+@media (min-width:640px){.mcard.w5{grid-column:span 2;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)}.mcard.w5 .spark{height:100%;border-bottom:0;border-right:1px solid var(--line)}.mcard.w5 .mc-body{justify-content:center;padding:22px 24px}.mcard.w5 h3{font-size:27px}.mcard.w5 .mc-eq{font-size:17px}}
+@media (min-width:640px) and (max-width:979px){.mcard.w3{grid-column:span 2;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)}.mcard.w3 .spark{height:100%;border-bottom:0;border-right:1px solid var(--line)}.mcard.w3 .mc-body{justify-content:center;padding:22px 24px}.mcard.w3 h3{font-size:27px}.mcard.w3 .mc-eq{font-size:17px}}
+@media (max-width:560px){.ghead{grid-template-columns:minmax(0,1fr);gap:8px}.gnum{font-size:52px}.crit{grid-column:1}}
+@media (max-width:900px){.hero{grid-template-columns:minmax(0,1fr);padding-top:36px;gap:28px}.how{grid-template-columns:minmax(0,1fr)}.ghead{grid-template-columns:auto minmax(0,1fr)}.crit{grid-column:1/-1;align-items:flex-start;flex-direction:row;gap:10px;align-self:start}}
+@media (max-width:420px){.cards{grid-template-columns:minmax(0,1fr)}.display{font-size:40px}}
 </style>
-<script>window.MathJax={tex:{inlineMath:[['\\(','\\)']]},svg:{fontCache:'none'}};</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.min.js" async></script>
-<div class="wrap">
-<header>
-<div class="meta">Matemática Aplicada II · Ecuaciones en diferencias</div>
-<h1>Laboratorio de modelos discretos</h1>
-<p class="lead">Once simuladores, uno por modelo. Cada página tiene deslizadores, casos precargados y un resumen con el equilibrio, las raíces y el tipo de trayectoria.</p>
-</header>
-<section>
-<h2>Primer orden <small>Modelos I · \(y_{t+1}=A\,y_t+B\), estable si \(|A|<1\)</small></h2>
-<div class="grid">
-<a class="item" href="ecuacion-canonica.html"><span class="name">Ecuación canónica</span><span class="eqn">\(y_{t+1}=A\,y_t+B\)</span><span class="desc">Movés \(A\), \(B\) e \(y_0\) y ves la trayectoria, el punto fijo y el diagrama de fase. Sirve para fijar los cuatro casos según \(A\).</span><span class="go">Abrir →</span></a>
-<a class="item" href="interes-y-rentas.html"><span class="name">Interés y rentas ciertas</span><span class="eqn">\(S_{t+1}=(1+i)\,S_t+c\)</span><span class="desc">Capitalización, valor de una renta y saldo de un préstamo como ecuación de primer orden.</span><span class="go">Abrir →</span></a>
-<a class="item" href="telarana-estandar.html"><span class="name">Telaraña estándar</span><span class="eqn">\(P_{t+1}=-\dfrac{\delta}{\beta}\,P_t+\dfrac{\alpha+\gamma}{\beta}\)</span><span class="desc">El ciclo de la telaraña con reproducción animada. Estable si \(\delta<\beta\).</span><span class="go">Abrir →</span></a>
-<a class="item" href="expectativas-adaptativas.html"><span class="name">Expectativas adaptativas</span><span class="eqn">\(A=1-\eta\left(1+\dfrac{\delta}{\beta}\right)\)</span><span class="desc">Cómo la velocidad de ajuste \(\eta\) estabiliza un mercado que con expectativas ingenuas explota.</span><span class="go">Abrir →</span></a>
-<a class="item" href="mercado-con-inventarios.html"><span class="name">Mercado con inventarios</span><span class="eqn">\(A=1-\sigma(\beta+\delta)\)</span><span class="desc">Ajuste de precios por exceso de oferta. Zonas monótona, oscilante amortiguada y explosiva según \(\sigma\).</span><span class="go">Abrir →</span></a>
-</div>
+<script>window.MathJax={tex:{inlineMath:[["\\(","\\)"]]},svg:{fontCache:"global"},options:{enableMenu:false}};</script><script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.min.js"></script>
+</head>
+<body>
+<div class="topbar"><a class="brand" href="index.html"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="1" y="1" width="30" height="30" rx="8" fill="#15202b" stroke="#ffffff" stroke-opacity=".18"/><path d="M7 25 L25 7" stroke="#6aa4f2" stroke-width="1.6"/><path d="M7 9 L25 23" stroke="#f27a45" stroke-width="1.6"/><path d="M10 25 V11.3 H18.6 V17.8 H13.8 V14.2 H16.4" fill="none" stroke="#ffb066" stroke-width="1.8" stroke-linejoin="round"/></svg><span>Laboratorio de modelos discretos</span></a><span class="meta">Matemática Aplicada II · FCE-UBA</span></div>
+<main class="home">
+<section class="hero">
+  <div class="hero-text">
+    <span class="kicker">Ecuaciones en diferencias</span>
+    <h1 class="display">Laboratorio de modelos <em>discretos</em></h1>
+    <p class="lead">Once simuladores para ver cómo se mueve una economía período a período. Cada uno resuelve un modelo de la cursada y deja cambiar los parámetros mientras la trayectoria se dibuja.</p>
+    <div class="cta"><a class="btn pri" href="ecuacion-canonica.html">Empezar por la ecuación canónica <span aria-hidden="true">→</span></a><a class="btn" href="#modelos-i">Ver los once modelos</a></div>
+  </div>
+  <figure class="hero-fig card">
+    <div class="hf-top"><span class="hf-eq">\(y_{t+1}=A\,y_t+B\)</span><span class="hf-state" id="hstate" role="status"></span></div>
+    <svg id="hplot" viewBox="0 0 560 290" role="img" aria-label="Trayectoria de y en el tiempo para el valor elegido de A"></svg>
+    <div class="hf-ctl"><label for="hA">Mové \(A\)</label><input type="range" id="hA" min="-1.2" max="1.2" step="0.05" value="-0.7"><output id="o_hA"></output></div>
+    <div class="hf-chips"><button type="button" data-a="0.6">\(A=0{,}6\)</button><button type="button" data-a="-0.7">\(A=-0{,}7\)</button><button type="button" data-a="-1">\(A=-1\)</button><button type="button" data-a="1.1">\(A=1{,}1\)</button></div>
+    <figcaption>Con \(|A|\lt 1\) la trayectoria vuelve a \(y^*\); con \(A\lt 0\) lo hace oscilando.</figcaption>
+  </figure>
 </section>
-<section>
-<h2>Segundo orden <small>Modelos II · estable dentro del triángulo de Schur</small></h2>
-<div class="grid">
-<a class="item" href="triangulo-de-estabilidad.html"><span class="name">Triángulo de estabilidad</span><span class="eqn">\(1-q>0,\;1+p+q>0,\;1-p+q>0\)</span><span class="desc">Arrastrás el punto \((p,q)\) por el triángulo de Schur y ves las raíces y la trayectoria.</span><span class="go">Abrir →</span></a>
-<a class="item" href="telarana-extrapolacion.html"><span class="name">Telaraña con extrapolación</span><span class="eqn">\(P_{t+2}+\mu(1+\phi)P_{t+1}-\mu\phi P_t=g\)</span><span class="desc">Moviendo \(\phi\) y \(\delta/\beta\) se ven las raíces, los ciclos y la región de estabilidad en el plano \((\mu,\phi)\).</span><span class="go">Abrir →</span></a>
-<a class="item" href="metzler.html"><span class="name">Inventarios de Metzler</span><span class="eqn">\(Y_{t+2}-c(2+k)Y_{t+1}+c(1+k)Y_t=V_0\)</span><span class="desc">Los cuatro regímenes del ingreso según \(c\) y \(k\). Un shock y la respuesta del sistema.</span><span class="go">Abrir →</span></a>
-</div>
-</section>
-<section>
-<h2>Macroeconomía dinámica <small>Modelos III · segundo orden con parámetros macro</small></h2>
-<div class="grid">
-<a class="item" href="samuelson.html"><span class="name">Samuelson</span><span class="eqn">\(Y_{t+2}-\gamma(1+\alpha)Y_{t+1}+\alpha\gamma Y_t=G_0\)</span><span class="desc">Multiplicador más acelerador. Moviendo \(\alpha\) y \(\gamma\) se ven los cuatro regímenes y el ciclo endógeno. Estable si \(\alpha\gamma<1\).</span><span class="go">Abrir →</span></a>
-<a class="item" href="hicks.html"><span class="name">Hicks</span><span class="eqn">\(Y_{t+2}-(\gamma+\alpha)Y_{t+1}+\alpha Y_t=I_0(1+g)^{t+2}\)</span><span class="desc">Ciclo alrededor de una tendencia creciente, con techo y piso opcionales. Estable si \(\alpha<1\).</span><span class="go">Abrir →</span></a>
-<a class="item" href="inflacion-desempleo.html"><span class="name">Inflación y desempleo</span><span class="eqn">\(p_{t+2}-a_1p_{t+1}+a_2p_t=\tfrac{j\beta k m}{1+\beta k}\)</span><span class="desc">Phillips con expectativas adaptativas. Un cambio de \(m\), la trayectoria y la curva de largo plazo según \(g\).</span><span class="go">Abrir →</span></a>
-</div>
-</section>
-</div>
+<ol class="how">
+  <li><div><b>Elegí un caso</b><span>Cada simulador trae casos precargados: estable, en el borde y explosivo.</span></div></li>
+  <li><div><b>Reproducí la dinámica</b><span>Avanzá período a período o dejá correr la animación.</span></div></li>
+  <li><div><b>Mové los parámetros</b><span>Las raíces, el equilibrio y el régimen se recalculan al instante.</span></div></li>
+</ol>
+<section class="group" id="modelos-i"><header class="ghead"><div class="gnum" aria-hidden="true">I</div><div class="gtxt"><span class="kicker">Modelos I</span><h2 class="gt">Primer orden</h2><p>Un coeficiente y una condición inicial. El equilibrio es \(y^*=B/(1-A)\) y todo depende de dónde cae \(A\).</p></div><div class="crit"><span class="cl">Estable si</span><span class="cv">\(|A|\lt 1\)</span></div></header><div class="cards"><a class="mcard w5" href="ecuacion-canonica.html"><svg class="spark" data-s="ecuacion-canonica" viewBox="0 0 420 190" role="img" aria-label="Trayectoria típica de Ecuación canónica"></svg><div class="mc-body"><span class="mc-tag">Herramienta</span><h3>Ecuación canónica</h3><span class="mc-eq">\(y_{t+1}=A\,y_t+B\)</span><p>El punto de partida: diagrama de fases, trayectoria y los cuatro casos según \(A\).</p><span class="mc-go">Abrir simulador <span aria-hidden="true">→</span></span></div></a><a class="mcard" href="interes-y-rentas.html"><svg class="spark" data-s="interes-y-rentas" viewBox="0 0 320 92" role="img" aria-label="Trayectoria típica de Interés y rentas"></svg><div class="mc-body"><span class="mc-tag">Finanzas</span><h3>Interés y rentas</h3><span class="mc-eq">\(S_{t+1}=(1+i)\,S_t+c\)</span><p>Capitalización, valor final de una renta y saldo de un préstamo.</p><span class="mc-go">Abrir simulador <span aria-hidden="true">→</span></span></div></a><a class="mcard" href="telarana-estandar.html"><svg class="spark" data-s="telarana-estandar" viewBox="0 0 320 92" role="img" aria-label="Trayectoria típica de Telaraña estándar"></svg><div class="mc-body"><span class="mc-tag">Mercado</span><h3>Telaraña estándar</h3><span class="mc-eq">\(P_{t+1}=\tfrac{\alpha+\gamma}{\beta}-\tfrac{\delta}{\beta}P_t\)</span><p>El ciclo de la telaraña, escalón por escalón sobre la oferta y la demanda.</p><span class="mc-go">Abrir simulador <span aria-hidden="true">→</span></span></div></a><a class="mcard" href="expectativas-adaptativas.html"><svg class="spark" data-s="expectativas-adaptativas" viewBox="0 0 320 92" role="img" aria-label="Trayectoria típica de Expectativas adaptativas"></svg><div class="mc-body"><span class="mc-tag">Mercado</span><h3>Expectativas adaptativas</h3><span class="mc-eq">\(A=1-\eta\left(1+\tfrac{\delta}{\beta}\right)\)</span><p>Cómo una velocidad de ajuste \(\eta\) chica estabiliza un mercado explosivo.</p><span class="mc-go">Abrir simulador <span aria-hidden="true">→</span></span></div></a><a class="mcard" href="mercado-con-inventarios.html"><svg class="spark" data-s="mercado-con-inventarios" viewBox="0 0 320 92" role="img" aria-label="Trayectoria típica de Mercado con inventarios"></svg><div class="mc-body"><span class="mc-tag">Mercado</span><h3>Mercado con inventarios</h3><span class="mc-eq">\(A=1-\sigma(\beta+\delta)\)</span><p>El precio responde al stock: zonas monótona, oscilante y explosiva según \(\sigma\).</p><span class="mc-go">Abrir simulador <span aria-hidden="true">→</span></span></div></a></div></section>
+<section class="group" id="modelos-ii"><header class="ghead"><div class="gnum" aria-hidden="true">II</div><div class="gtxt"><span class="kicker">Modelos II</span><h2 class="gt">Segundo orden</h2><p>Dos rezagos y dos raíces. La trayectoria puede ser monótona, en zigzag o cíclica, y el triángulo de Schur decide si converge.</p></div><div class="crit"><span class="cl">Estable si</span><span class="cv">\(1-q\gt 0,\;1\pm p+q\gt 0\)</span></div></header><div class="cards"><a class="mcard w3" href="triangulo-de-estabilidad.html"><svg class="spark" data-s="triangulo-de-estabilidad" viewBox="0 0 420 190" role="img" aria-label="Trayectoria típica de Triángulo de estabilidad"></svg><div class="mc-body"><span class="mc-tag">Herramienta</span><h3>Triángulo de estabilidad</h3><span class="mc-eq">\(y_{t+2}+p\,y_{t+1}+q\,y_t=g\)</span><p>Arrastrá \((p,q)\) por el triángulo y mirá cómo cambian las raíces y la trayectoria.</p><span class="mc-go">Abrir simulador <span aria-hidden="true">→</span></span></div></a><a class="mcard" href="telarana-extrapolacion.html"><svg class="spark" data-s="telarana-extrapolacion" viewBox="0 0 320 92" role="img" aria-label="Trayectoria típica de Telaraña con extrapolación"></svg><div class="mc-body"><span class="mc-tag">Mercado</span><h3>Telaraña con extrapolación</h3><span class="mc-eq">\(P_{t+2}+\mu(1+\phi)P_{t+1}-\mu\phi P_t=g\)</span><p>Proyectar la tendencia: ciclos, zigzag y la región estable en el plano \((\mu,\phi)\).</p><span class="mc-go">Abrir simulador <span aria-hidden="true">→</span></span></div></a><a class="mcard" href="metzler.html"><svg class="spark" data-s="metzler" viewBox="0 0 320 92" role="img" aria-label="Trayectoria típica de Inventarios de Metzler"></svg><div class="mc-body"><span class="mc-tag">Macro</span><h3>Inventarios de Metzler</h3><span class="mc-eq">\(Y_{t+2}-c(2+k)Y_{t+1}+c(1+k)Y_t=V_0\)</span><p>Stock deseado y acelerador: los cuatro regímenes del ingreso según \(c\) y \(k\).</p><span class="mc-go">Abrir simulador <span aria-hidden="true">→</span></span></div></a></div></section>
+<section class="group" id="modelos-iii"><header class="ghead"><div class="gnum" aria-hidden="true">III</div><div class="gtxt"><span class="kicker">Modelos III</span><h2 class="gt">Macroeconomía dinámica</h2><p>El mismo aparato aplicado al ingreso, al crecimiento y a la inflación: ciclos endógenos, techos y pisos, y la curva de Phillips.</p></div><div class="crit"><span class="cl">Estable si</span><span class="cv">\(|R_1|,\,|R_2|\lt 1\)</span></div></header><div class="cards"><a class="mcard w3" href="samuelson.html"><svg class="spark" data-s="samuelson" viewBox="0 0 420 190" role="img" aria-label="Trayectoria típica de Samuelson"></svg><div class="mc-body"><span class="mc-tag">Macro</span><h3>Samuelson</h3><span class="mc-eq">\(Y_{t+2}-\gamma(1+\alpha)Y_{t+1}+\alpha\gamma Y_t=G_0\)</span><p>Multiplicador más acelerador: ciclos sin shocks externos. Estable si \(\alpha\gamma\lt 1\).</p><span class="mc-go">Abrir simulador <span aria-hidden="true">→</span></span></div></a><a class="mcard" href="hicks.html"><svg class="spark" data-s="hicks" viewBox="0 0 320 92" role="img" aria-label="Trayectoria típica de Hicks"></svg><div class="mc-body"><span class="mc-tag">Macro</span><h3>Hicks</h3><span class="mc-eq">\(Y_{t+2}-(\gamma+\alpha)Y_{t+1}+\alpha Y_t=I_0(1+g)^{t+2}\)</span><p>Ciclo alrededor de una tendencia creciente, con techo y piso opcionales.</p><span class="mc-go">Abrir simulador <span aria-hidden="true">→</span></span></div></a><a class="mcard" href="inflacion-desempleo.html"><svg class="spark" data-s="inflacion-desempleo" viewBox="0 0 320 92" role="img" aria-label="Trayectoria típica de Inflación y desempleo"></svg><div class="mc-body"><span class="mc-tag">Macro</span><h3>Inflación y desempleo</h3><span class="mc-eq">\(p_{t+2}-a_1p_{t+1}+a_2p_t=\tfrac{j\beta km}{1+\beta k}\)</span><p>Phillips con expectativas: un cambio de \(m\) y la curva de largo plazo según \(g\).</p><span class="mc-go">Abrir simulador <span aria-hidden="true">→</span></span></div></a></div></section>
+</main>
+<footer class="foot"><span>Matemática Aplicada II · Ecuaciones en diferencias</span><span>Chiang y Wainwright, cap. 17–18 · Bernardello et al., cap. 3</span></footer>
+<script>
+var $=function(i){return document.getElementById(i)};
+function F(x,d){return x.toLocaleString('es-AR',{minimumFractionDigits:d==null?2:d,maximumFractionDigits:d==null?2:d})}
+var RM=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+/* ---------- figura del hero ---------- */
+var HW=560,HH=290,HL=40,HR=46,HT=16,HB=32,N=16,YS=10,Y0=18,LO=0,HI=20;
+function hX(t){return HL+t/N*(HW-HL-HR)}function hY(v){return HT+(HH-HT-HB)*(1-(v-LO)/(HI-LO))}
+function regime(A){if(Math.abs(A-1)<1e-9)return['Constante','var(--warn)'];if(A>1)return['Monótona explosiva','var(--bad)'];
+ if(A>0)return['Monótona convergente','var(--good)'];if(Math.abs(A)<1e-9)return['Converge en un paso','var(--good)'];
+ if(Math.abs(A+1)<1e-9)return['Oscilación uniforme','var(--warn)'];if(A>-1)return['Oscilación amortiguada','var(--good)'];return['Oscilación explosiva','var(--bad)']}
+var prog=RM?1:0;
+function hero(){var A=+$('hA').value,y=[Y0];for(var t=0;t<N;t++)y.push(A*y[t]+YS*(1-A));
+ var o='<defs><clipPath id="hc"><rect x="'+HL+'" y="'+(HT-4)+'" width="'+(HW-HL-HR+6)+'" height="'+(HH-HT-HB+8)+'"/></clipPath></defs>';
+ [0,5,10,15,20].forEach(function(v){o+='<line x1="'+HL+'" x2="'+(HW-HR)+'" y1="'+hY(v)+'" y2="'+hY(v)+'" style="stroke:var(--line)"/><text x="'+(HL-8)+'" y="'+(hY(v)+4)+'" font-size="13" text-anchor="end" style="fill:var(--faint)">'+v+'</text>'});
+ for(var t=0;t<=N;t+=4)o+='<text x="'+hX(t)+'" y="'+(HH-10)+'" font-size="13" text-anchor="middle" style="fill:var(--faint)">'+t+'</text>';
+ o+='<text x="'+(HW-HR+30)+'" y="'+(HH-10)+'" class="mv" text-anchor="start" style="fill:var(--muted)">t</text>';
+ o+='<line x1="'+HL+'" x2="'+(HW-HR)+'" y1="'+hY(YS)+'" y2="'+hY(YS)+'" style="stroke:var(--supply)" stroke-width="1.6" stroke-dasharray="6 5"/>';
+ o+='<text x="'+(HW-HR+14)+'" y="'+(hY(YS)+5)+'" class="mv" style="fill:var(--supply)">y*</text>';
+ var n=Math.max(1,Math.round(prog*N)),pts=[];for(var t=0;t<=n;t++)pts.push(hX(t).toFixed(1)+','+hY(y[t]).toFixed(1));
+ o+='<g clip-path="url(#hc)"><polyline fill="none" style="stroke:var(--accent)" stroke-width="2.6" stroke-linejoin="round" points="'+pts.join(' ')+'"/>';
+ for(var t=0;t<=n;t++)o+='<circle cx="'+hX(t).toFixed(1)+'" cy="'+hY(y[t]).toFixed(1)+'" r="'+(t===n?5.5:3.2)+'" style="fill:'+(t===n?'var(--accent)':'var(--surface)')+';stroke:var(--accent)" stroke-width="2"/>';
+ o+='</g>';$('hplot').innerHTML=o;
+ $('o_hA').textContent=F(A);var r=regime(A),s=$('hstate');s.textContent=r[0];s.style.color=r[1]}
+function intro(ts0){var t0=null;function f(ts){if(t0==null)t0=ts;prog=Math.min(1,(ts-t0)/1500);hero();if(prog<1)requestAnimationFrame(f)}requestAnimationFrame(f)}
+$('hA').addEventListener('input',function(){prog=1;hero()});
+Array.prototype.forEach.call(document.querySelectorAll('[data-a]'),function(b){b.addEventListener('click',function(){$('hA').value=b.dataset.a;prog=RM?1:0;if(RM)hero();else intro()})});
+hero();if(!RM)intro();
+/* ---------- miniaturas ---------- */
+function lin(A,B,y0,n){var y=[y0];for(var t=0;t<n;t++)y.push(A*y[t]+B);return y}
+function sec(p,q,g,y0,y1,n){var y=[y0,y1];for(var t=2;t<=n;t++)y.push(g-p*y[t-1]-q*y[t-2]);return y}
+var SP={
+ 'ecuacion-canonica':function(){return{y:lin(-0.7,17,18,16),s:10}},
+ 'interes-y-rentas':function(){return{y:lin(1.08,10,0,16),s:null}},
+ 'telarana-estandar':function(){return{y:lin(-0.8,7.2,5.2,16),s:4}},
+ 'expectativas-adaptativas':function(){return{y:lin(-0.5,6,5.2,12),s:4}},
+ 'mercado-con-inventarios':function(){return{y:lin(0.55,1.8,6.4,14),s:4}},
+ 'triangulo-de-estabilidad':function(){return{y:sec(-1,0.5,5,16,14,22),s:10}},
+ 'telarana-extrapolacion':function(){return{y:sec(1.2,0.8,12,4.6,12-2*4.6,24),s:4}},
+ 'metzler':function(){return{y:sec(-1.68,0.88,20,100,110,30),s:100}},
+ 'samuelson':function(){return{y:sec(-1.5,0.9,20,50,60,30),s:50}},
+ 'hicks':function(){var ga=.6,al=.5,g=.03,I=10,G=1+g,D=G*G-(ga+al)*G+al,A=I*G*G/D,y=[A,A*G*1.12],tr=[];
+   for(var t=0;t<=30;t++)tr.push(A*Math.pow(G,t));for(var t=2;t<=30;t++)y.push((ga+al)*y[t-1]-al*y[t-2]+I*Math.pow(G,t));return{y:y,s:null,tr:tr}},
+ 'inflacion-desempleo':function(){var a=8,be=1,g=.8,j=.5,k=.4,mo=4,mn=8,pi=mo,U=(a-(1-g)*mo)/be,P=[];
+   for(var t=0;t<=30;t++){var pt=a-be*U+g*pi;P.push(pt);var pin=pi+j*(pt-pi);U=(U-k*mn+k*(a+g*pin))/(1+be*k);pi=pin}return{y:P,s:mn}}
+};
+Array.prototype.forEach.call(document.querySelectorAll('.spark'),function(el){var d=SP[el.dataset.s]();if(!d)return;
+ var vb=el.viewBox.baseVal,W=vb.width,Hh=vb.height,L=14,R=14,T=14,B=14,y=d.y,n=y.length-1,vals=y.concat(d.s==null?[]:[d.s]).concat(d.tr||[]);
+ var lo=Math.min.apply(null,vals),hi=Math.max.apply(null,vals),pd=(hi-lo)*0.08;lo-=pd;hi+=pd;
+ var X=function(t){return L+t/n*(W-L-R)},Y=function(v){return T+(Hh-T-B)*(1-(v-lo)/(hi-lo))};
+ var o='';if(d.s!=null)o+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+Y(d.s)+'" y2="'+Y(d.s)+'" style="stroke:var(--supply)" stroke-width="1.3" stroke-dasharray="5 4" opacity=".8"/>';
+ if(d.tr)o+='<polyline fill="none" style="stroke:var(--supply)" stroke-width="1.3" stroke-dasharray="5 4" opacity=".8" points="'+d.tr.map(function(v,t){return X(t).toFixed(1)+','+Y(v).toFixed(1)}).join(' ')+'"/>';
+ o+='<polyline fill="none" style="stroke:var(--accent)" stroke-width="2.2" stroke-linejoin="round" points="'+y.map(function(v,t){return X(t).toFixed(1)+','+Y(v).toFixed(1)}).join(' ')+'"/>';
+ y.forEach(function(v,t){if(n<=16||t%2===0)o+='<circle cx="'+X(t).toFixed(1)+'" cy="'+Y(v).toFixed(1)+'" r="2" style="fill:var(--accent)"/>'});
+ o+='<circle cx="'+X(n).toFixed(1)+'" cy="'+Y(y[n]).toFixed(1)+'" r="4" style="fill:var(--accent);stroke:var(--surface)" stroke-width="2"/>';
+ el.innerHTML=o});
+</script>
+</body>
+</html>
