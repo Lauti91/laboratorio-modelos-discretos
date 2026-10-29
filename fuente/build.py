@@ -4,13 +4,13 @@ OUT=os.path.join(H,'site');os.makedirs(OUT,exist_ok=True)
 CSS=open(os.path.join(H,'common.css'),encoding='utf-8').read()
 LIB=open(os.path.join(H,'lib.js'),encoding='utf-8').read()
 FONTS=('<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
- '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;1,6..72,500&family=STIX+Two+Text:ital@0;1&display=swap">')
+ '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&family=Share+Tech+Mono&family=STIX+Two+Text:ital@0;1&display=swap">')
 MATHJAX=('<script>window.MathJax={tex:{inlineMath:[["\\\\(","\\\\)"]]},svg:{fontCache:"global"},options:{enableMenu:false}};</script>'
  '<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.min.js"></script>')
 SITE='Laboratorio de modelos discretos'
-ICON=('<svg viewBox="0 0 32 32" aria-hidden="true"><rect x="1" y="1" width="30" height="30" rx="8" fill="#15202b" stroke="#ffffff" stroke-opacity=".18"/>'
- '<path d="M7 25 L25 7" stroke="#6aa4f2" stroke-width="1.6"/><path d="M7 9 L25 23" stroke="#f27a45" stroke-width="1.6"/>'
- '<path d="M10 25 V11.3 H18.6 V17.8 H13.8 V14.2 H16.4" fill="none" stroke="#ffb066" stroke-width="1.8" stroke-linejoin="round"/></svg>')
+ICON=('<svg viewBox="0 0 32 32" aria-hidden="true"><rect x="1" y="1" width="30" height="30" rx="5" fill="#111c2d" stroke="#26364f"/>'
+ '<rect x="5" y="6" width="22" height="16" rx="2" fill="#060b14"/><path d="M6 15 L9 9 L12 19 L15 11 L18 16 L21 13 L26 14" fill="none" stroke="#ff8a1f" stroke-width="1.6" stroke-linejoin="round"/>'
+ '<circle cx="9" cy="26.5" r="1.6" fill="#5aa9ff"/><rect x="14" y="25.3" width="13" height="2.4" rx="1" fill="#26364f"/></svg>')
 FAVICON='data:image/svg+xml,'+ICON.replace('<svg ','<svg xmlns="http://www.w3.org/2000/svg" ').replace('"',"'").replace('#','%23').replace('<','%3C').replace('>','%3E')
 GROUPS={'I':('Modelos I','Primer orden'),'II':('Modelos II','Segundo orden'),'III':('Modelos III','Macroeconomía dinámica')}
 # fn -> (slug, grupo, nombre corto)
@@ -90,7 +90,7 @@ def stat(l,i,w=False,t=False):
     return f'<div class="stat{" w" if w else ""}"><div class="l">{lab(l)}</div><div class="v{" t" if t else ""}" id="{i}"></div></div>'
 def anim_bar(extra=''):
     return f'''  <div class="bar">
-    {extra}
+    <span class="pre">{extra}</span>
     <span class="ctrls"><button type="button" class="go" id="step">Siguiente paso</button><button type="button" class="go" id="pl">Reproducir</button><button type="button" id="rs">Reiniciar</button></span>
   </div>'''
 def card(inner,cls=''):
@@ -108,18 +108,20 @@ def head(title,desc):
 <style>
 {CSS}
 '''
-def topbar():
-    return f'<div class="topbar"><a class="brand" href="index.html">{ICON}<span>{SITE}</span></a><span class="meta">Matemática Aplicada II · FCE-UBA</span></div>'
+def mno(slug): return 'MD-%02d'%(ORDER.index(slug)+1)
+def topbar(slug=None):
+    right=(f'<span class="meta"><a href="index.html">◀ Rack</a>&nbsp; {mno(slug)} / {len(ORDER):02d}</span>' if slug else '<span class="meta">Matemática Aplicada II · FCE-UBA</span>')
+    return f'<div class="topbar"><a class="brand" href="index.html">{ICON}<span><b>Lab</b> · Modelos discretos</span></a>{right}</div>'
 def foot():
-    return '<footer class="foot"><span>Matemática Aplicada II · Ecuaciones en diferencias</span><span>Chiang y Wainwright, cap. 17–18 · Bernardello et al., cap. 3</span></footer>'
+    return '<footer class="foot"><span>Matemática Aplicada II · FCE-UBA</span><span>Chiang y Wainwright, cap. 17–18 · Bernardello et al., cap. 3</span></footer>'
 def pager(slug):
-    i=ORDER.index(slug);o='<nav class="pager" aria-label="Otros simuladores">'
+    i=ORDER.index(slug);o='<nav class="pager" aria-label="Otros módulos">'
     if i>0:
-        r=BYSLUG[ORDER[i-1]];o+=f'<a class="pv" href="{r[1]}.html"><span class="d">← Anterior</span><span class="n">{r[3]}</span></a>'
+        r=BYSLUG[ORDER[i-1]];o+=f'<a class="pv" href="{r[1]}.html"><span class="d">◀ {mno(r[1])}</span><span class="n">{r[3]}</span></a>'
     if i<len(ORDER)-1:
-        r=BYSLUG[ORDER[i+1]];o+=f'<a class="nx" href="{r[1]}.html"><span class="d">Siguiente →</span><span class="n">{r[3]}</span></a>'
+        r=BYSLUG[ORDER[i+1]];o+=f'<a class="nx" href="{r[1]}.html"><span class="n">{r[3]}</span><span class="d">{mno(r[1])} ▶</span></a>'
     else:
-        o+='<a class="nx" href="index.html"><span class="d">Volver →</span><span class="n">Todos los modelos</span></a>'
+        o+='<a class="nx" href="index.html"><span class="n">Volver al rack</span><span class="d">▶</span></a>'
     return o+'</nav>'
 def page(fn,title,h1,sub,eqs,bar,charts,side,js,extra_css=''):
     r=BYFN[fn];slug,grp,short=r[1],r[2],r[3];g=GROUPS[grp]
@@ -131,11 +133,11 @@ def page(fn,title,h1,sub,eqs,bar,charts,side,js,extra_css=''):
 {MATHJAX}
 </head>
 <body>
-{topbar()}
+{topbar(slug)}
 <div class="wrap">
-  <nav class="crumbs" aria-label="Ubicación"><a href="index.html">Inicio</a><span class="sl">/</span><a href="index.html#modelos-{grp.lower()}">{g[0]} · {g[1]}</a></nav>
-  <header class="simhead">
-    <span class="kicker">{g[0]} · {g[1]}</span>
+  <header class="plate">
+    <span class="mno">{mno(slug)}</span>
+    <span class="grp">{g[0]} · {g[1]}</span>
     <h1>{h1}</h1>
     <p class="sub">{sub}</p>
     <div class="eq">{eqh}</div>
@@ -155,6 +157,7 @@ def page(fn,title,h1,sub,eqs,bar,charts,side,js,extra_css=''):
 <script>
 {LIB}
 {js}
+(function(){{var b=document.getElementById('pl');if(!b)return;var f=function(){{b.classList.toggle('run',/paus/i.test(b.textContent))}};new MutationObserver(f).observe(b,{{childList:true,characterData:true,subtree:true}});f()}})();
 </script>
 </body>
 </html>

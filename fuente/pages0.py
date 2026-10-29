@@ -5,6 +5,7 @@ def _cut(s,a,b):
 _bar=_cut(_src,'<div class="bar">','<div class="layout">').rstrip()
 _bar=_bar[:_bar.rfind('</div>')+6]
 import re as _re
+_bar=_bar.replace('<span class="lbl">','<span class="pre"><span class="lbl">',1).replace('<span class="sep"></span>','</span><span class="sep"></span>',1)
 _bar=_re.sub(r'<button type="button" class="go" id="step">.*?id="rs">Reiniciar</button>',lambda m:'<span class="ctrls">'+_re.sub(r'>\s+<','><',m.group(0))+'</span>',_bar,flags=_re.S)
 _charts=_cut(_src,'<div class="charts">','<aside class="side">')
 _charts=_charts[len('<div class="charts">'):_charts.rfind('</div>')]
