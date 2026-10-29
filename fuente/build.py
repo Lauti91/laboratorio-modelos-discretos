@@ -126,8 +126,10 @@ def pager(slug):
 exec(open(os.path.join(H,'derivs.py'),encoding='utf-8').read())
 def deriv_html(fn):
     if fn not in DERIV: return ''
-    intro,steps=DERIV[fn];n=len(steps);li=''
-    for i,(t,q,body) in enumerate(steps):
+    intro,steps=DERIV[fn];n=len(steps);li='';ph=None;pk=0
+    for i,(fase,t,q,body) in enumerate(steps):
+        if fase!=ph:
+            ph=fase;pk+=1;li+=f'<li class="dphase" aria-hidden="true"><span>Etapa {pk}</span>{fase}</li>'
         qh=f'<p class="dq"><span>Antes de abrirlo:</span> {q}</p>' if q else '<p class="dq"><span>Siguiente:</span> seguí con la derivación.</p>'
         li+=(f'<li class="dstep{" open" if i==0 else (" next" if i==1 else " locked")}" id="paso-{i+1}">'
              f'<div class="dn" aria-hidden="true">{i+1}</div><div class="dw"><h3>{t}</h3>{qh}'
