@@ -110,7 +110,7 @@ def head(title,desc):
 '''
 def mno(slug): return 'MD-%02d'%(ORDER.index(slug)+1)
 def topbar(slug=None):
-    right=(f'<span class="meta"><a href="index.html">◀ Rack</a>&nbsp; {mno(slug)} / {len(ORDER):02d}</span>' if slug else '<span class="meta">Matemática Aplicada II · FCE-UBA</span>')
+    right=(f'<span class="meta"><a href="index.html">◀ Índice</a>&nbsp; {mno(slug)} / {len(ORDER):02d}</span>' if slug else '<span class="meta">Matemática Aplicada II · FCE-UBA</span>')
     return f'<div class="topbar"><a class="brand" href="index.html">{ICON}<span><b>Lab</b> · Modelos discretos</span></a>{right}</div>'
 def foot():
     return '<footer class="foot"><span>Matemática Aplicada II · FCE-UBA</span><span>Chiang y Wainwright, cap. 17–18 · Bernardello et al., cap. 3</span></footer>'
@@ -121,7 +121,7 @@ def pager(slug):
     if i<len(ORDER)-1:
         r=BYSLUG[ORDER[i+1]];o+=f'<a class="nx" href="{r[1]}.html"><span class="n">{r[3]}</span><span class="d">{mno(r[1])} ▶</span></a>'
     else:
-        o+='<a class="nx" href="index.html"><span class="n">Volver al rack</span><span class="d">▶</span></a>'
+        o+='<a class="nx" href="index.html"><span class="n">Volver al índice</span><span class="d">▶</span></a>'
     return o+'</nav>'
 def page(fn,title,h1,sub,eqs,bar,charts,side,js,extra_css=''):
     r=BYFN[fn];slug,grp,short=r[1],r[2],r[3];g=GROUPS[grp]
