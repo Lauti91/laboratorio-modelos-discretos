@@ -143,7 +143,6 @@ HERO=r'''
   <div class="hero-text">
     <span class="kicker">Ecuaciones en diferencias</span>
     <h1 class="display">Laboratorio de modelos <em>discretos</em></h1>
-    <p class="lead">Once simuladores para ver cómo se mueve una economía período a período. Cada uno resuelve un modelo de la cursada y deja cambiar los parámetros mientras la trayectoria se dibuja.</p>
     <div class="cta"><a class="btn pri" href="ecuacion-canonica.html">Empezar por la ecuación canónica <span aria-hidden="true">→</span></a><a class="btn" href="#modelos-i">Ver los once modelos</a></div>
   </div>
   <figure class="hero-fig card">
