@@ -139,13 +139,55 @@ svg text.mv{font-family:var(--math);font-style:italic;font-size:15px;paint-order
 .pager .pv{grid-column:1}
 .foot{max-width:1200px;margin:28px auto 0;padding-top:14px;border-top:1px solid var(--edge);font-size:13px;color:var(--faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
 
+/* ---------- derivación ---------- */
+.dlink{font-size:14.5px;color:var(--accent);text-decoration:none;white-space:nowrap;margin-left:6px}
+.dlink:hover{text-decoration:underline;text-underline-offset:3px}
+.deriv{margin-top:10px;background:var(--panel);border:1px solid var(--edge);border-radius:12px;box-shadow:var(--raise);padding:22px;scroll-margin-top:12px}
+.dhead{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px 24px;align-items:end;padding-bottom:16px;border-bottom:1px solid var(--edge)}
+h2.dtitle{font-family:var(--cond);font-weight:700;font-size:clamp(26px,3vw,32px);letter-spacing:.005em;text-transform:none;color:var(--fg);margin:0;display:block}
+h2.dtitle::after{display:none}
+.dsub{margin:4px 0 0;color:var(--muted);max-width:68ch}
+.dctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:flex-end}
+.dprog{font-family:var(--mono);font-size:14px;color:var(--muted)}
+.dprog b{color:var(--accent);font-weight:400}
+.dbar{width:110px;height:6px;border-radius:3px;background:var(--chip);overflow:hidden}
+.dbar i{display:block;height:100%;background:var(--accent);transition:width .25s}
+.dbtn{font-family:var(--cond);font-size:15.5px;font-weight:600;letter-spacing:.03em;padding:7px 13px}
+.dbtn.pri{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.dbtn.ghost{border-color:transparent;background:transparent;color:var(--muted)}
+.dbtn:disabled{opacity:.45;cursor:default}
+.dsteps{list-style:none;margin:0;padding:0;counter-reset:none}
+.dstep{display:grid;grid-template-columns:40px minmax(0,1fr);gap:14px;padding:18px 0;border-bottom:1px solid var(--edge);position:relative}
+.dstep:last-child{border-bottom:0;padding-bottom:4px}
+.dn{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-family:var(--mono);font-size:15px;border:1.5px solid var(--line2);color:var(--muted);background:var(--panel)}
+.dstep.open .dn{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.dstep.next .dn{border-color:var(--accent);color:var(--accent)}
+.dw{min-width:0}
+.dstep h3{font-family:var(--cond);font-weight:600;font-size:21px;margin:3px 0 6px;letter-spacing:.01em}
+.dq{margin:0 0 10px;color:var(--muted);font-size:15px}
+.dq span{font-family:var(--cond);font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-size:13px;color:var(--accent);margin-right:4px}
+.dunl{font-family:var(--cond);font-size:15px;font-weight:600;letter-spacing:.03em;border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.dbody{color:var(--fg);font-size:15.5px}
+.dbody p{margin:6px 0;max-width:76ch}
+.dbody mjx-container[display="true"]{display:block;margin:10px 0!important;padding:10px 12px;overflow-x:auto;overflow-y:hidden;max-width:100%;background:var(--surface2);border:1px solid var(--edge);border-radius:8px}
+.dtab{border-collapse:collapse;margin:8px 0;font-size:15px;display:block;overflow-x:auto;max-width:100%}
+.dtab td{padding:7px 14px 7px 0;border-bottom:1px solid var(--edge);vertical-align:middle}
+.dtab td:first-child{white-space:nowrap;padding-right:22px}
+.dstep.open .dq,.dstep.open .dunl{display:none}
+.dstep.next .dbody{display:none}
+.dstep.locked .dbody,.dstep.locked .dq,.dstep.locked .dunl{display:none}
+.dstep.locked h3{color:var(--faint)}
+.dstep.locked h3 mjx-container{opacity:.6}
+.dstep.open .dbody{animation:dfade .3s ease}
+@keyframes dfade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+@media (max-width:760px){.dbody mjx-container[display="true"] svg{max-width:100%;height:auto}.dhead{grid-template-columns:minmax(0,1fr)}.dctl{justify-content:flex-start}.deriv{padding:16px}.dstep{grid-template-columns:32px minmax(0,1fr);gap:10px}.dn{width:28px;height:28px;font-size:14px}}
 @media (max-width:1000px){.bar{flex-wrap:wrap}.bar .ctrls{margin-left:0;padding-left:0;border-left:0}}
 @media (max-width:900px){.layout{grid-template-columns:minmax(0,1fr)}.row2{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:620px){.plate{grid-template-columns:minmax(0,1fr)}.mno{grid-row:auto;justify-self:start;margin-top:0}
   .pager{grid-template-columns:1fr}.pager .nx,.pager .pv{grid-column:1}.pager .nx{justify-content:flex-start;text-align:left}
   .bar .ctrls{width:100%;flex-wrap:wrap}.eq>span{font-size:14.5px}
   svg[viewBox^="0 0 680"]:not([viewBox$=" 74"]) text{font-size:23px}svg[viewBox^="0 0 680"]:not([viewBox$=" 74"]) text.mv{font-size:26px}svg[viewBox^="0 0 680"]:not([viewBox$=" 74"]) circle{r:5px}}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 
 
 </style>
@@ -158,7 +200,7 @@ svg text.mv{font-family:var(--math);font-style:italic;font-size:15px;paint-order
     <span class="mno">MD-06</span>
     <span class="grp">Modelos II · Segundo orden</span>
     <h1>Ecuaciones de segundo orden: el triángulo de estabilidad</h1>
-    <p class="sub">Toda ecuación de segundo orden queda resumida en el punto (p, q). Adentro del triángulo, la trayectoria converge.</p>
+    <p class="sub">Toda ecuación de segundo orden queda resumida en el punto (p, q). Adentro del triángulo, la trayectoria converge. <a class="dlink" href="#derivacion">Ver la derivación paso a paso ↓</a></p>
     <div class="eq"><span>\(y_{t+2}+p\,y_{t+1}+q\,y_t=g\)</span><span>\(r^2+p\,r+q=0\)</span><span>\(y^*=\frac{g}{1+p+q}\)</span></div>
   </header>
   <div class="bar">
@@ -186,6 +228,17 @@ svg text.mv{font-family:var(--math);font-style:italic;font-size:15px;paint-order
       <div class="card "><h2>Parámetros</h2><div class="ctl"><label for="p"><span class="lt">\(p\)</span><output id="o_p"></output></label><input type="range" id="p" min="-3" max="3" step="0.05" value="-1" data-d="2"></div><div class="ctl"><label for="q"><span class="lt">\(q\)</span><output id="o_q"></output></label><input type="range" id="q" min="-1.5" max="2.4" step="0.05" value="0.5" data-d="2"></div><div class="ctl"><label for="g"><span class="lt">\(g\) (término constante)</span><output id="o_g"></output></label><input type="range" id="g" min="0" max="30" step="1" value="10" data-d="0"></div><div class="ctl"><label for="y0"><span class="lt">\(y_0\)</span><output id="o_y0"></output></label><input type="range" id="y0" min="-10" max="50" step="1" value="30" data-d="0"></div><div class="ctl"><label for="y1"><span class="lt">\(y_1\)</span><output id="o_y1"></output></label><input type="range" id="y1" min="-10" max="50" step="1" value="26" data-d="0"></div><div class="ctl"><label for="sp"><span class="lt">Velocidad</span><output id="o_sp"></output></label><input type="range" id="sp" min="0.5" max="6" step="0.5" value="3" data-d="1"></div></div>
     </aside>
   </div>
+  <section class="deriv" id="derivacion" aria-labelledby="dtit"><header class="dhead"><div><h2 class="dtitle" id="dtit">Derivación paso a paso</h2><p class="dsub">El método general para \(y_{t+2}+p\,y_{t+1}+q\,y_t=g\), que después se aplica a cada modelo de segundo orden.</p></div><div class="dctl"><span class="dprog" role="status">Paso <b id="dk">1</b> de 8</span><div class="dbar"><i id="dfill" style="width:12.5%"></i></div><button type="button" id="dnext" class="dbtn">Desbloquear siguiente</button><button type="button" id="dall" class="dbtn pri">Mostrar derivación completa</button><button type="button" id="dreset" class="dbtn ghost">Volver a empezar</button></div></header><ol class="dsteps"><li class="dstep open" id="paso-1"><div class="dn" aria-hidden="true">1</div><div class="dw"><h3>Planteo</h3><p class="dq"><span>Siguiente:</span> seguí con la derivación.</p><button type="button" class="dunl">Desbloquear paso 1</button><div class="dbody">\[ y_{t+2}+p\,y_{t+1}+q\,y_t=g \]
+<p>con \(y_0\) e \(y_1\) dados. La solución es la suma de una solución particular y la solución de la homogénea.</p></div></div></li><li class="dstep next" id="paso-2"><div class="dn" aria-hidden="true">2</div><div class="dw"><h3>Solución particular</h3><p class="dq"><span>Antes de abrirlo:</span> Proponé \(y_t=y^*\) constante.</p><button type="button" class="dunl">Desbloquear paso 2</button><div class="dbody">\[ y^*+p\,y^*+q\,y^*=g\quad\Longrightarrow\quad y^*=\frac{g}{1+p+q}\qquad(1+p+q\neq0) \]</div></div></li><li class="dstep locked" id="paso-3"><div class="dn" aria-hidden="true">3</div><div class="dw"><h3>La ecuación homogénea</h3><p class="dq"><span>Antes de abrirlo:</span> ¿Qué ecuación cumple el desvío \(z_t=y_t-y^*\)?</p><button type="button" class="dunl">Desbloquear paso 3</button><div class="dbody"><p>Restando la ecuación del equilibrio:</p>
+\[ z_{t+2}+p\,z_{t+1}+q\,z_t=0 \]</div></div></li><li class="dstep locked" id="paso-4"><div class="dn" aria-hidden="true">4</div><div class="dw"><h3>Ecuación característica</h3><p class="dq"><span>Antes de abrirlo:</span> Probá con \(z_t=r^t\). ¿Qué tiene que cumplir \(r\)?</p><button type="button" class="dunl">Desbloquear paso 4</button><div class="dbody"><p>Reemplazando y dividiendo por \(r^t\):</p>
+\[ r^2+p\,r+q=0,\qquad r_{1,2}=\frac{-p\pm\sqrt{\Delta}}{2},\qquad \Delta=p^2-4q \]
+<p>Además \(r_1+r_2=-p\) y \(r_1r_2=q\).</p></div></div></li><li class="dstep locked" id="paso-5"><div class="dn" aria-hidden="true">5</div><div class="dw"><h3>Los tres casos</h3><p class="dq"><span>Antes de abrirlo:</span> ¿Cómo se escribe la solución según el signo de \(\Delta\)?</p><button type="button" class="dunl">Desbloquear paso 5</button><div class="dbody"><table class="dtab"><tr><td>\(\Delta\gt 0\)</td><td>\(z_t=C_1r_1^{\,t}+C_2r_2^{\,t}\)</td></tr><tr><td>\(\Delta=0\)</td><td>\(z_t=(C_1+C_2t)\,r^t,\;r=-p/2\)</td></tr><tr><td>\(\Delta\lt 0\)</td><td>\(z_t=\rho^t\left(C_1\cos\theta t+C_2\operatorname{sen}\theta t\right)\)</td></tr></table>
+<p>En el caso complejo \(r=\rho(\cos\theta\pm i\operatorname{sen}\theta)\) con \(\rho=\sqrt q\) y \(\cos\theta=-\dfrac{p}{2\sqrt q}\).</p></div></div></li><li class="dstep locked" id="paso-6"><div class="dn" aria-hidden="true">6</div><div class="dw"><h3>Constantes</h3><p class="dq"><span>Antes de abrirlo:</span> Usá \(y_0\) e \(y_1\).</p><button type="button" class="dunl">Desbloquear paso 6</button><div class="dbody"><p>Con \(z_0=y_0-y^*\) y \(z_1=y_1-y^*\). Por ejemplo, si \(\Delta\gt 0\):</p>
+\[ C_1+C_2=z_0,\qquad C_1r_1+C_2r_2=z_1 \]
+<p>La solución general es \(y_t=y^*+z_t\).</p></div></div></li><li class="dstep locked" id="paso-7"><div class="dn" aria-hidden="true">7</div><div class="dw"><h3>Condición de estabilidad</h3><p class="dq"><span>Antes de abrirlo:</span> \(z_t\to0\) si y sólo si las dos raíces tienen módulo menor que 1. ¿Cómo se traduce en \(p\) y \(q\)?</p><button type="button" class="dunl">Desbloquear paso 7</button><div class="dbody"><p>Sea \(f(r)=r^2+p\,r+q\). Si las raíces son reales, están en \((-1,1)\) cuando \(f(1)\gt 0\), \(f(-1)\gt 0\) y \(r_1r_2=q\lt 1\). Si son complejas, \(|r|^2=q\lt 1\). En ambos casos:</p>
+\[ 1-q\gt 0,\qquad 1+p+q\gt 0,\qquad 1-p+q\gt 0 \]
+<p>Son los tres lados del triángulo en el plano \((p,q)\).</p></div></div></li><li class="dstep locked" id="paso-8"><div class="dn" aria-hidden="true">8</div><div class="dw"><h3>Forma de la trayectoria</h3><p class="dq"><span>Siguiente:</span> seguí con la derivación.</p><button type="button" class="dunl">Desbloquear paso 8</button><div class="dbody"><table class="dtab"><tr><td>raíces complejas</td><td>ciclo, con período \(2\pi/\theta\)</td></tr><tr><td>raíz dominante real negativa</td><td>zigzag</td></tr><tr><td>raíz dominante real positiva</td><td>monótona</td></tr></table>
+<p>La parábola \(q=p^2/4\) separa las raíces complejas (arriba) de las reales (abajo).</p></div></div></li></ol></section>
   <nav class="pager" aria-label="Otros módulos"><a class="pv" href="mercado-con-inventarios.html"><span class="d">◀ MD-05</span><span class="n">Mercado con inventarios</span></a><a class="nx" href="telarana-extrapolacion.html"><span class="n">Telaraña con extrapolación</span><span class="d">MD-07 ▶</span></a></nav>
 </div>
 <footer class="foot"><span>Matemática Aplicada II · FCE-UBA</span><span>Chiang y Wainwright, cap. 17–18 · Bernardello et al., cap. 3</span></footer>
@@ -315,6 +368,18 @@ $('step').onclick=An.step;$('pl').onclick=An.toggle;$('rs').onclick=An.reset;
 drag($('c3'),function(xy){setv('p',Math.round(cl(MF.ix(xy[0]),-3,3)*20)/20);setv('q',Math.round(cl(MF.iy(xy[1]),-1.5,2.4)*20)/20);An.fit();render()});
 bindSliders(['p','q','g','y0','y1','sp'],function(){An.fit();render()});
 An.full();
+
+
+(function(){var S=[].slice.call(document.querySelectorAll('.dstep'));if(!S.length)return;var k=1,n=S.length,RM=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+ function upd(go){S.forEach(function(e,i){e.classList.toggle('open',i<k);e.classList.toggle('next',i===k);e.classList.toggle('locked',i>k)});
+  document.getElementById('dk').textContent=Math.min(k,n);document.getElementById('dfill').style.width=(100*Math.min(k,n)/n)+'%';
+  document.getElementById('dnext').disabled=k>=n;document.getElementById('dall').disabled=k>=n;
+  if(go&&S[go-1])S[go-1].scrollIntoView({behavior:RM?'auto':'smooth',block:'nearest'})}
+ S.forEach(function(e,i){e.querySelector('.dunl').addEventListener('click',function(){k=i+1;upd(k)})});
+ document.getElementById('dnext').addEventListener('click',function(){if(k<n){k++;upd(k)}});
+ document.getElementById('dall').addEventListener('click',function(){k=n;upd()});
+ document.getElementById('dreset').addEventListener('click',function(){k=1;upd(1)});
+ upd()})();
 
 (function(){var b=document.getElementById('pl');if(!b)return;var f=function(){b.classList.toggle('run',/paus/i.test(b.textContent))};new MutationObserver(f).observe(b,{childList:true,characterData:true,subtree:true});f()})();
 </script>

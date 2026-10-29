@@ -139,13 +139,55 @@ svg text.mv{font-family:var(--math);font-style:italic;font-size:15px;paint-order
 .pager .pv{grid-column:1}
 .foot{max-width:1200px;margin:28px auto 0;padding-top:14px;border-top:1px solid var(--edge);font-size:13px;color:var(--faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
 
+/* ---------- derivación ---------- */
+.dlink{font-size:14.5px;color:var(--accent);text-decoration:none;white-space:nowrap;margin-left:6px}
+.dlink:hover{text-decoration:underline;text-underline-offset:3px}
+.deriv{margin-top:10px;background:var(--panel);border:1px solid var(--edge);border-radius:12px;box-shadow:var(--raise);padding:22px;scroll-margin-top:12px}
+.dhead{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px 24px;align-items:end;padding-bottom:16px;border-bottom:1px solid var(--edge)}
+h2.dtitle{font-family:var(--cond);font-weight:700;font-size:clamp(26px,3vw,32px);letter-spacing:.005em;text-transform:none;color:var(--fg);margin:0;display:block}
+h2.dtitle::after{display:none}
+.dsub{margin:4px 0 0;color:var(--muted);max-width:68ch}
+.dctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:flex-end}
+.dprog{font-family:var(--mono);font-size:14px;color:var(--muted)}
+.dprog b{color:var(--accent);font-weight:400}
+.dbar{width:110px;height:6px;border-radius:3px;background:var(--chip);overflow:hidden}
+.dbar i{display:block;height:100%;background:var(--accent);transition:width .25s}
+.dbtn{font-family:var(--cond);font-size:15.5px;font-weight:600;letter-spacing:.03em;padding:7px 13px}
+.dbtn.pri{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.dbtn.ghost{border-color:transparent;background:transparent;color:var(--muted)}
+.dbtn:disabled{opacity:.45;cursor:default}
+.dsteps{list-style:none;margin:0;padding:0;counter-reset:none}
+.dstep{display:grid;grid-template-columns:40px minmax(0,1fr);gap:14px;padding:18px 0;border-bottom:1px solid var(--edge);position:relative}
+.dstep:last-child{border-bottom:0;padding-bottom:4px}
+.dn{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-family:var(--mono);font-size:15px;border:1.5px solid var(--line2);color:var(--muted);background:var(--panel)}
+.dstep.open .dn{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.dstep.next .dn{border-color:var(--accent);color:var(--accent)}
+.dw{min-width:0}
+.dstep h3{font-family:var(--cond);font-weight:600;font-size:21px;margin:3px 0 6px;letter-spacing:.01em}
+.dq{margin:0 0 10px;color:var(--muted);font-size:15px}
+.dq span{font-family:var(--cond);font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-size:13px;color:var(--accent);margin-right:4px}
+.dunl{font-family:var(--cond);font-size:15px;font-weight:600;letter-spacing:.03em;border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.dbody{color:var(--fg);font-size:15.5px}
+.dbody p{margin:6px 0;max-width:76ch}
+.dbody mjx-container[display="true"]{display:block;margin:10px 0!important;padding:10px 12px;overflow-x:auto;overflow-y:hidden;max-width:100%;background:var(--surface2);border:1px solid var(--edge);border-radius:8px}
+.dtab{border-collapse:collapse;margin:8px 0;font-size:15px;display:block;overflow-x:auto;max-width:100%}
+.dtab td{padding:7px 14px 7px 0;border-bottom:1px solid var(--edge);vertical-align:middle}
+.dtab td:first-child{white-space:nowrap;padding-right:22px}
+.dstep.open .dq,.dstep.open .dunl{display:none}
+.dstep.next .dbody{display:none}
+.dstep.locked .dbody,.dstep.locked .dq,.dstep.locked .dunl{display:none}
+.dstep.locked h3{color:var(--faint)}
+.dstep.locked h3 mjx-container{opacity:.6}
+.dstep.open .dbody{animation:dfade .3s ease}
+@keyframes dfade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+@media (max-width:760px){.dbody mjx-container[display="true"] svg{max-width:100%;height:auto}.dhead{grid-template-columns:minmax(0,1fr)}.dctl{justify-content:flex-start}.deriv{padding:16px}.dstep{grid-template-columns:32px minmax(0,1fr);gap:10px}.dn{width:28px;height:28px;font-size:14px}}
 @media (max-width:1000px){.bar{flex-wrap:wrap}.bar .ctrls{margin-left:0;padding-left:0;border-left:0}}
 @media (max-width:900px){.layout{grid-template-columns:minmax(0,1fr)}.row2{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:620px){.plate{grid-template-columns:minmax(0,1fr)}.mno{grid-row:auto;justify-self:start;margin-top:0}
   .pager{grid-template-columns:1fr}.pager .nx,.pager .pv{grid-column:1}.pager .nx{justify-content:flex-start;text-align:left}
   .bar .ctrls{width:100%;flex-wrap:wrap}.eq>span{font-size:14.5px}
   svg[viewBox^="0 0 680"]:not([viewBox$=" 74"]) text{font-size:23px}svg[viewBox^="0 0 680"]:not([viewBox$=" 74"]) text.mv{font-size:26px}svg[viewBox^="0 0 680"]:not([viewBox$=" 74"]) circle{r:5px}}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 
 
 </style>
@@ -158,7 +200,7 @@ svg text.mv{font-family:var(--math);font-style:italic;font-size:15px;paint-order
     <span class="mno">MD-02</span>
     <span class="grp">Modelos I · Primer orden</span>
     <h1>Interés y rentas ciertas</h1>
-    <p class="sub">Capitalización, valor final de una renta y saldo de un préstamo como ecuaciones de primer orden.</p>
+    <p class="sub">Capitalización, valor final de una renta y saldo de un préstamo como ecuaciones de primer orden. <a class="dlink" href="#derivacion">Ver la derivación paso a paso ↓</a></p>
     <div class="eq"><span id="e1"></span><span id="e2"></span></div>
   </header>
   <div class="bar">
@@ -179,6 +221,17 @@ svg text.mv{font-family:var(--math);font-style:italic;font-size:15px;paint-order
       <div class="card "><h2>Parámetros</h2><div id="g_C0"><div class="ctl"><label for="C0"><span class="lt">Capital inicial \(C\)</span><output id="o_C0"></output></label><input type="range" id="C0" min="100" max="10000" step="100" value="1000" data-d="0"></div></div><div class="ctl"><label for="i"><span class="lt">Tasa por período \(i\) (%)</span><output id="o_i"></output></label><input type="range" id="i" min="0.5" max="20" step="0.5" value="5" data-d="1"></div><div class="ctl"><label for="n"><span class="lt">Períodos \(n\)</span><output id="o_n"></output></label><input type="range" id="n" min="1" max="30" step="1" value="12" data-d="0"></div><div id="g_c" hidden><div class="ctl"><label for="c"><span class="lt">Cuota \(c\)</span><output id="o_c"></output></label><input type="range" id="c" min="10" max="1000" step="10" value="100" data-d="0"></div></div><div class="ctl"><label for="sp"><span class="lt">Velocidad</span><output id="o_sp"></output></label><input type="range" id="sp" min="0.5" max="6" step="0.5" value="2" data-d="1"></div></div>
     </aside>
   </div>
+  <section class="deriv" id="derivacion" aria-labelledby="dtit"><header class="dhead"><div><h2 class="dtitle" id="dtit">Derivación paso a paso</h2><p class="dsub">Las tres aplicaciones financieras son casos de \(y_{t+1}=A\,y_t+B\) con \(A=1+i\).</p></div><div class="dctl"><span class="dprog" role="status">Paso <b id="dk">1</b> de 6</span><div class="dbar"><i id="dfill" style="width:16.7%"></i></div><button type="button" id="dnext" class="dbtn">Desbloquear siguiente</button><button type="button" id="dall" class="dbtn pri">Mostrar derivación completa</button><button type="button" id="dreset" class="dbtn ghost">Volver a empezar</button></div></header><ol class="dsteps"><li class="dstep open" id="paso-1"><div class="dn" aria-hidden="true">1</div><div class="dw"><h3>Interés compuesto e interés simple</h3><p class="dq"><span>Siguiente:</span> seguí con la derivación.</p><button type="button" class="dunl">Desbloquear paso 1</button><div class="dbody"><p>Con interés compuesto, el capital de cada período genera interés sobre sí mismo:</p>
+\[ C_{t+1}=(1+i)\,C_t\quad\Rightarrow\quad A=1+i,\;B=0\quad\Rightarrow\quad C_t=C_0(1+i)^t \]
+<p>Con interés simple, el interés se calcula siempre sobre \(C_0\):</p>
+\[ C_{t+1}=C_t+i\,C_0\quad\Rightarrow\quad A=1,\;B=iC_0\quad\Rightarrow\quad C_t=C_0(1+i\,t) \]</div></div></li><li class="dstep next" id="paso-2"><div class="dn" aria-hidden="true">2</div><div class="dw"><h3>Valor final de una renta</h3><p class="dq"><span>Antes de abrirlo:</span> Si depositás \(c\) al final de cada período, ¿cómo pasa el saldo de \(S_t\) a \(S_{t+1}\)?</p><button type="button" class="dunl">Desbloquear paso 2</button><div class="dbody"><p>El saldo genera intereses y se suma el nuevo depósito. Partimos de \(S_0=0\):</p>
+\[ S_{t+1}=\underbrace{(1+i)\,S_t}_{\text{capital e intereses}}+\underbrace{c}_{\text{depósito}}\qquad A=1+i,\;B=c \]</div></div></li><li class="dstep locked" id="paso-3"><div class="dn" aria-hidden="true">3</div><div class="dw"><h3>Equilibrio y solución del ahorro</h3><p class="dq"><span>Antes de abrirlo:</span> Usá \(y^*=B/(1-A)\) y la solución general de la ecuación canónica.</p><button type="button" class="dunl">Desbloquear paso 3</button><div class="dbody">\[ S^*=\frac{c}{1-(1+i)}=-\frac{c}{i} \]
+\[ S_t=\left(S_0-S^*\right)(1+i)^t+S^*=\frac{c}{i}(1+i)^t-\frac{c}{i}=\boxed{\frac{c}{i}\Big[(1+i)^t-1\Big]} \]</div></div></li><li class="dstep locked" id="paso-4"><div class="dn" aria-hidden="true">4</div><div class="dw"><h3>Saldo de un préstamo</h3><p class="dq"><span>Antes de abrirlo:</span> Ahora la cuota \(c\) reduce la deuda. ¿Qué cambia en la ecuación?</p><button type="button" class="dunl">Desbloquear paso 4</button><div class="dbody"><p>La deuda genera intereses y se descuenta la cuota:</p>
+\[ V_{t+1}=(1+i)\,V_t-c\qquad A=1+i,\;B=-c,\qquad V^*=\frac{-c}{1-(1+i)}=\frac{c}{i} \]
+\[ V_t=\left(V_0-\frac{c}{i}\right)(1+i)^t+\frac{c}{i} \]</div></div></li><li class="dstep locked" id="paso-5"><div class="dn" aria-hidden="true">5</div><div class="dw"><h3>Valor actual: la deuda se cancela en \(n\) cuotas</h3><p class="dq"><span>Antes de abrirlo:</span> Imponé \(V_n=0\) y despejá \(V_0\).</p><button type="button" class="dunl">Desbloquear paso 5</button><div class="dbody">\[ 0=\left(V_0-\frac{c}{i}\right)(1+i)^n+\frac{c}{i}\quad\Rightarrow\quad V_0=\frac{c}{i}-\frac{c}{i}(1+i)^{-n} \]
+\[ \boxed{V_0=c\,\frac{1-(1+i)^{-n}}{i}} \]
+<p>El valor actual es la suma de las cuotas descontadas a la tasa \(i\).</p></div></div></li><li class="dstep locked" id="paso-6"><div class="dn" aria-hidden="true">6</div><div class="dw"><h3>Estabilidad</h3><p class="dq"><span>Antes de abrirlo:</span> ¿Cómo es \(A=1+i\) comparado con 1?</p><button type="button" class="dunl">Desbloquear paso 6</button><div class="dbody"><p>Como \(A=1+i\gt 1\), el equilibrio es <b>inestable</b>: el saldo se aleja de \(y^*\) en forma monótona.</p>
+<p>En el préstamo, si \(V_0\lt c/i\) la cuota cubre los intereses y algo de capital, y la deuda baja hasta cancelarse. Si \(V_0\gt c/i\) la cuota ni siquiera paga los intereses y la deuda crece.</p></div></div></li></ol></section>
   <nav class="pager" aria-label="Otros módulos"><a class="pv" href="ecuacion-canonica.html"><span class="d">◀ MD-01</span><span class="n">Ecuación canónica</span></a><a class="nx" href="telarana-estandar.html"><span class="n">Telaraña estándar</span><span class="d">MD-03 ▶</span></a></nav>
 </div>
 <footer class="foot"><span>Matemática Aplicada II · FCE-UBA</span><span>Chiang y Wainwright, cap. 17–18 · Bernardello et al., cap. 3</span></footer>
@@ -337,6 +390,18 @@ $('m_ic').onclick=function(){setMode('ic')};$('m_ah').onclick=function(){setMode
 $('step').onclick=An.step;$('pl').onclick=An.toggle;$('rs').onclick=An.reset;
 bindSliders(['C0','i','n','c','sp'],function(id){An.fit();if(id==='n')An.full();render()});
 setMode('ic');
+
+
+(function(){var S=[].slice.call(document.querySelectorAll('.dstep'));if(!S.length)return;var k=1,n=S.length,RM=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+ function upd(go){S.forEach(function(e,i){e.classList.toggle('open',i<k);e.classList.toggle('next',i===k);e.classList.toggle('locked',i>k)});
+  document.getElementById('dk').textContent=Math.min(k,n);document.getElementById('dfill').style.width=(100*Math.min(k,n)/n)+'%';
+  document.getElementById('dnext').disabled=k>=n;document.getElementById('dall').disabled=k>=n;
+  if(go&&S[go-1])S[go-1].scrollIntoView({behavior:RM?'auto':'smooth',block:'nearest'})}
+ S.forEach(function(e,i){e.querySelector('.dunl').addEventListener('click',function(){k=i+1;upd(k)})});
+ document.getElementById('dnext').addEventListener('click',function(){if(k<n){k++;upd(k)}});
+ document.getElementById('dall').addEventListener('click',function(){k=n;upd()});
+ document.getElementById('dreset').addEventListener('click',function(){k=1;upd(1)});
+ upd()})();
 
 (function(){var b=document.getElementById('pl');if(!b)return;var f=function(){b.classList.toggle('run',/paus/i.test(b.textContent))};new MutationObserver(f).observe(b,{childList:true,characterData:true,subtree:true});f()})();
 </script>

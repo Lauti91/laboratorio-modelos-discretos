@@ -139,13 +139,55 @@ svg text.mv{font-family:var(--math);font-style:italic;font-size:15px;paint-order
 .pager .pv{grid-column:1}
 .foot{max-width:1200px;margin:28px auto 0;padding-top:14px;border-top:1px solid var(--edge);font-size:13px;color:var(--faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
 
+/* ---------- derivación ---------- */
+.dlink{font-size:14.5px;color:var(--accent);text-decoration:none;white-space:nowrap;margin-left:6px}
+.dlink:hover{text-decoration:underline;text-underline-offset:3px}
+.deriv{margin-top:10px;background:var(--panel);border:1px solid var(--edge);border-radius:12px;box-shadow:var(--raise);padding:22px;scroll-margin-top:12px}
+.dhead{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px 24px;align-items:end;padding-bottom:16px;border-bottom:1px solid var(--edge)}
+h2.dtitle{font-family:var(--cond);font-weight:700;font-size:clamp(26px,3vw,32px);letter-spacing:.005em;text-transform:none;color:var(--fg);margin:0;display:block}
+h2.dtitle::after{display:none}
+.dsub{margin:4px 0 0;color:var(--muted);max-width:68ch}
+.dctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:flex-end}
+.dprog{font-family:var(--mono);font-size:14px;color:var(--muted)}
+.dprog b{color:var(--accent);font-weight:400}
+.dbar{width:110px;height:6px;border-radius:3px;background:var(--chip);overflow:hidden}
+.dbar i{display:block;height:100%;background:var(--accent);transition:width .25s}
+.dbtn{font-family:var(--cond);font-size:15.5px;font-weight:600;letter-spacing:.03em;padding:7px 13px}
+.dbtn.pri{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.dbtn.ghost{border-color:transparent;background:transparent;color:var(--muted)}
+.dbtn:disabled{opacity:.45;cursor:default}
+.dsteps{list-style:none;margin:0;padding:0;counter-reset:none}
+.dstep{display:grid;grid-template-columns:40px minmax(0,1fr);gap:14px;padding:18px 0;border-bottom:1px solid var(--edge);position:relative}
+.dstep:last-child{border-bottom:0;padding-bottom:4px}
+.dn{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-family:var(--mono);font-size:15px;border:1.5px solid var(--line2);color:var(--muted);background:var(--panel)}
+.dstep.open .dn{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.dstep.next .dn{border-color:var(--accent);color:var(--accent)}
+.dw{min-width:0}
+.dstep h3{font-family:var(--cond);font-weight:600;font-size:21px;margin:3px 0 6px;letter-spacing:.01em}
+.dq{margin:0 0 10px;color:var(--muted);font-size:15px}
+.dq span{font-family:var(--cond);font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-size:13px;color:var(--accent);margin-right:4px}
+.dunl{font-family:var(--cond);font-size:15px;font-weight:600;letter-spacing:.03em;border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.dbody{color:var(--fg);font-size:15.5px}
+.dbody p{margin:6px 0;max-width:76ch}
+.dbody mjx-container[display="true"]{display:block;margin:10px 0!important;padding:10px 12px;overflow-x:auto;overflow-y:hidden;max-width:100%;background:var(--surface2);border:1px solid var(--edge);border-radius:8px}
+.dtab{border-collapse:collapse;margin:8px 0;font-size:15px;display:block;overflow-x:auto;max-width:100%}
+.dtab td{padding:7px 14px 7px 0;border-bottom:1px solid var(--edge);vertical-align:middle}
+.dtab td:first-child{white-space:nowrap;padding-right:22px}
+.dstep.open .dq,.dstep.open .dunl{display:none}
+.dstep.next .dbody{display:none}
+.dstep.locked .dbody,.dstep.locked .dq,.dstep.locked .dunl{display:none}
+.dstep.locked h3{color:var(--faint)}
+.dstep.locked h3 mjx-container{opacity:.6}
+.dstep.open .dbody{animation:dfade .3s ease}
+@keyframes dfade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+@media (max-width:760px){.dbody mjx-container[display="true"] svg{max-width:100%;height:auto}.dhead{grid-template-columns:minmax(0,1fr)}.dctl{justify-content:flex-start}.deriv{padding:16px}.dstep{grid-template-columns:32px minmax(0,1fr);gap:10px}.dn{width:28px;height:28px;font-size:14px}}
 @media (max-width:1000px){.bar{flex-wrap:wrap}.bar .ctrls{margin-left:0;padding-left:0;border-left:0}}
 @media (max-width:900px){.layout{grid-template-columns:minmax(0,1fr)}.row2{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:620px){.plate{grid-template-columns:minmax(0,1fr)}.mno{grid-row:auto;justify-self:start;margin-top:0}
   .pager{grid-template-columns:1fr}.pager .nx,.pager .pv{grid-column:1}.pager .nx{justify-content:flex-start;text-align:left}
   .bar .ctrls{width:100%;flex-wrap:wrap}.eq>span{font-size:14.5px}
   svg[viewBox^="0 0 680"]:not([viewBox$=" 74"]) text{font-size:23px}svg[viewBox^="0 0 680"]:not([viewBox$=" 74"]) text.mv{font-size:26px}svg[viewBox^="0 0 680"]:not([viewBox$=" 74"]) circle{r:5px}}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 
 
 </style>
@@ -158,7 +200,7 @@ svg text.mv{font-family:var(--math);font-style:italic;font-size:15px;paint-order
     <span class="mno">MD-11</span>
     <span class="grp">Modelos III · Macroeconomía dinámica</span>
     <h1>Inflación y desempleo en tiempo discreto</h1>
-    <p class="sub">Curva de Phillips con expectativas adaptativas y política monetaria. La inflación converge a m y g decide si el trade-off es permanente.</p>
+    <p class="sub">Curva de Phillips con expectativas adaptativas y política monetaria. La inflación converge a m y g decide si el trade-off es permanente. <a class="dlink" href="#derivacion">Ver la derivación paso a paso ↓</a></p>
     <div class="eq"><span>\(p_t=\alpha-T-\beta U_t+g\,\pi_t\)</span><span>\(\pi_{t+1}-\pi_t=j\,(p_t-\pi_t)\)</span><span>\(U_{t+1}-U_t=-k\,(m-p_{t+1})\)</span><span>\(\bar p=m\)</span></div>
   </header>
   <div class="bar">
@@ -185,6 +227,16 @@ svg text.mv{font-family:var(--math);font-style:italic;font-size:15px;paint-order
       <div class="card "><h2>Parámetros</h2><div class="ctl"><label for="a"><span class="lt">\(\alpha-T\) (intercepto, %)</span><output id="o_a"></output></label><input type="range" id="a" min="4" max="12" step="0.5" value="8" data-d="1"></div><div class="ctl"><label for="be"><span class="lt">\(\beta\) (efecto del desempleo)</span><output id="o_be"></output></label><input type="range" id="be" min="0.5" max="3" step="0.1" value="1" data-d="1"></div><div class="ctl"><label for="g"><span class="lt">\(g\) (traslado de expectativas)</span><output id="o_g"></output></label><input type="range" id="g" min="0.05" max="1" step="0.05" value="0.8" data-d="2"></div><div class="ctl"><label for="j"><span class="lt">\(j\) (aprendizaje)</span><output id="o_j"></output></label><input type="range" id="j" min="0.05" max="1" step="0.05" value="0.5" data-d="2"></div><div class="ctl"><label for="k"><span class="lt">\(k\) (sensibilidad al dinero real)</span><output id="o_k"></output></label><input type="range" id="k" min="0.05" max="2" step="0.05" value="0.4" data-d="2"></div><div class="ctl"><label for="mo"><span class="lt">\(m\) previa (%)</span><output id="o_mo"></output></label><input type="range" id="mo" min="0" max="12" step="0.5" value="4" data-d="1"></div><div class="ctl"><label for="mn"><span class="lt">\(m\) nueva (%)</span><output id="o_mn"></output></label><input type="range" id="mn" min="0" max="12" step="0.5" value="8" data-d="1"></div><div class="ctl"><label for="sp"><span class="lt">Velocidad</span><output id="o_sp"></output></label><input type="range" id="sp" min="0.5" max="8" step="0.5" value="4" data-d="1"></div></div>
     </aside>
   </div>
+  <section class="deriv" id="derivacion" aria-labelledby="dtit"><header class="dhead"><div><h2 class="dtitle" id="dtit">Derivación paso a paso</h2><p class="dsub">Curva de Phillips con expectativas, expectativas adaptativas y política monetaria (Chiang, §18.3).</p></div><div class="dctl"><span class="dprog" role="status">Paso <b id="dk">1</b> de 7</span><div class="dbar"><i id="dfill" style="width:14.3%"></i></div><button type="button" id="dnext" class="dbtn">Desbloquear siguiente</button><button type="button" id="dall" class="dbtn pri">Mostrar derivación completa</button><button type="button" id="dreset" class="dbtn ghost">Volver a empezar</button></div></header><ol class="dsteps"><li class="dstep open" id="paso-1"><div class="dn" aria-hidden="true">1</div><div class="dw"><h3>El sistema</h3><p class="dq"><span>Siguiente:</span> seguí con la derivación.</p><button type="button" class="dunl">Desbloquear paso 1</button><div class="dbody">\[ \begin{cases} p_t=\alpha-T-\beta U_t+g\,\pi_t & (18.18)\\ \pi_{t+1}-\pi_t=j\,(p_t-\pi_t) & (18.19)\\ U_{t+1}-U_t=-k\,(m-p_{t+1}) & (18.20) \end{cases} \]
+<p>Tres variables endógenas: \(p_t\), \(\pi_t\) y \(U_t\). El parámetro de política es \(m\).</p></div></div></li><li class="dstep next" id="paso-2"><div class="dn" aria-hidden="true">2</div><div class="dw"><h3>Diferenciar la curva de Phillips</h3><p class="dq"><span>Antes de abrirlo:</span> Adelantá (18.18) un período y restá. Después usá (18.19) y (18.20).</p><button type="button" class="dunl">Desbloquear paso 2</button><div class="dbody">\[ \begin{aligned} p_{t+1}-p_t&=-\beta(U_{t+1}-U_t)+g(\pi_{t+1}-\pi_t)\\ &=\beta k(m-p_{t+1})+gj(p_t-\pi_t)\qquad(18.21) \end{aligned} \]</div></div></li><li class="dstep locked" id="paso-3"><div class="dn" aria-hidden="true">3</div><div class="dw"><h3>Eliminar \(\pi_t\)</h3><p class="dq"><span>Antes de abrirlo:</span> De (18.18), \(g\pi_t=p_t-(\alpha-T)+\beta U_t\).</p><button type="button" class="dunl">Desbloquear paso 3</button><div class="dbody">\[ \begin{aligned} (1+\beta k)\,p_{t+1}-\left[1-j(1-g)\right]p_t+j\beta U_t\\ =\beta k m+j(\alpha-T)\qquad(18.23) \end{aligned} \]</div></div></li><li class="dstep locked" id="paso-4"><div class="dn" aria-hidden="true">4</div><div class="dw"><h3>Eliminar \(U_t\)</h3><p class="dq"><span>Antes de abrirlo:</span> Adelantá (18.23), restale (18.23) y usá (18.20) para \(U_{t+1}-U_t\).</p><button type="button" class="dunl">Desbloquear paso 4</button><div class="dbody">\[ \begin{aligned} (1+\beta k)(p_{t+2}-p_{t+1})-\left[1-j(1-g)\right](p_{t+1}-p_t)\\ +\,j\beta k(p_{t+1}-m)=0 \end{aligned} \]
+<p>Agrupando y dividiendo por \(1+\beta k\):</p>
+\[ \boxed{p_{t+2}-a_1\,p_{t+1}+a_2\,p_t=\frac{j\beta k\,m}{1+\beta k}} \]
+\[ a_1=\frac{1+gj+(1-j)(1+\beta k)}{1+\beta k},\quad a_2=\frac{1-j(1-g)}{1+\beta k} \]</div></div></li><li class="dstep locked" id="paso-5"><div class="dn" aria-hidden="true">5</div><div class="dw"><h3>Inflación de equilibrio</h3><p class="dq"><span>Antes de abrirlo:</span> Proponé \(p_t=\bar p\) constante.</p><button type="button" class="dunl">Desbloquear paso 5</button><div class="dbody">\[ \bar p=\frac{j\beta k m/(1+\beta k)}{1-a_1+a_2} \]
+\[ 1-a_1+a_2=\frac{\beta jk}{1+\beta k}\quad\Longrightarrow\quad\bar p=m \]
+<p>En el largo plazo la inflación iguala la tasa de expansión monetaria.</p></div></div></li><li class="dstep locked" id="paso-6"><div class="dn" aria-hidden="true">6</div><div class="dw"><h3>La convergencia está garantizada</h3><p class="dq"><span>Antes de abrirlo:</span> Mirá la suma, el producto y \((1-r_1)(1-r_2)\).</p><button type="button" class="dunl">Desbloquear paso 6</button><div class="dbody">\[ r_1+r_2=a_1\gt 0,\qquad r_1r_2=a_2\in(0,1) \]
+\[ (1-r_1)(1-r_2)=1-a_1+a_2=\frac{\beta jk}{1+\beta k}\gt 0 \]
+<p>Si las raíces son reales, sólo es posible \(0\lt r_2\lt r_1\lt 1\). Si son complejas, \(\rho=\sqrt{a_2}\lt 1\). En los dos casos \(p_t\to m\).</p></div></div></li><li class="dstep locked" id="paso-7"><div class="dn" aria-hidden="true">7</div><div class="dw"><h3>Curva de Phillips de largo plazo</h3><p class="dq"><span>Antes de abrirlo:</span> Con \(\pi=p=\bar p\) en (18.18), despejá \(\bar U\).</p><button type="button" class="dunl">Desbloquear paso 7</button><div class="dbody">\[ \bar U=\frac{1}{\beta}\Big[\alpha-T-(1-g)\,\bar p\Big] \]
+<p>Si \(g\lt 1\), la curva tiene pendiente \(-(1-g)/\beta\lt 0\): hay un trade-off permanente. Si \(g=1\), \(\bar U=(\alpha-T)/\beta\) no depende de \(\bar p\): la curva es vertical (tasa natural de desempleo).</p></div></div></li></ol></section>
   <nav class="pager" aria-label="Otros módulos"><a class="pv" href="hicks.html"><span class="d">◀ MD-10</span><span class="n">Hicks</span></a><a class="nx" href="index.html"><span class="n">Volver al índice</span><span class="d">▶</span></a></nav>
 </div>
 <footer class="foot"><span>Matemática Aplicada II · FCE-UBA</span><span>Chiang y Wainwright, cap. 17–18 · Bernardello et al., cap. 3</span></footer>
@@ -320,6 +372,18 @@ $('b4').onclick=function(){pre({j:0.1})};$('b5').onclick=function(){pre({k:1.5,j
 $('step').onclick=An.step;$('pl').onclick=An.toggle;$('rs').onclick=An.reset;
 bindSliders(['a','be','g','j','k','mo','mn','sp'],function(){An.fit();render()});
 An.full();
+
+
+(function(){var S=[].slice.call(document.querySelectorAll('.dstep'));if(!S.length)return;var k=1,n=S.length,RM=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+ function upd(go){S.forEach(function(e,i){e.classList.toggle('open',i<k);e.classList.toggle('next',i===k);e.classList.toggle('locked',i>k)});
+  document.getElementById('dk').textContent=Math.min(k,n);document.getElementById('dfill').style.width=(100*Math.min(k,n)/n)+'%';
+  document.getElementById('dnext').disabled=k>=n;document.getElementById('dall').disabled=k>=n;
+  if(go&&S[go-1])S[go-1].scrollIntoView({behavior:RM?'auto':'smooth',block:'nearest'})}
+ S.forEach(function(e,i){e.querySelector('.dunl').addEventListener('click',function(){k=i+1;upd(k)})});
+ document.getElementById('dnext').addEventListener('click',function(){if(k<n){k++;upd(k)}});
+ document.getElementById('dall').addEventListener('click',function(){k=n;upd()});
+ document.getElementById('dreset').addEventListener('click',function(){k=1;upd(1)});
+ upd()})();
 
 (function(){var b=document.getElementById('pl');if(!b)return;var f=function(){b.classList.toggle('run',/paus/i.test(b.textContent))};new MutationObserver(f).observe(b,{childList:true,characterData:true,subtree:true});f()})();
 </script>

@@ -139,13 +139,55 @@ svg text.mv{font-family:var(--math);font-style:italic;font-size:15px;paint-order
 .pager .pv{grid-column:1}
 .foot{max-width:1200px;margin:28px auto 0;padding-top:14px;border-top:1px solid var(--edge);font-size:13px;color:var(--faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
 
+/* ---------- derivación ---------- */
+.dlink{font-size:14.5px;color:var(--accent);text-decoration:none;white-space:nowrap;margin-left:6px}
+.dlink:hover{text-decoration:underline;text-underline-offset:3px}
+.deriv{margin-top:10px;background:var(--panel);border:1px solid var(--edge);border-radius:12px;box-shadow:var(--raise);padding:22px;scroll-margin-top:12px}
+.dhead{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px 24px;align-items:end;padding-bottom:16px;border-bottom:1px solid var(--edge)}
+h2.dtitle{font-family:var(--cond);font-weight:700;font-size:clamp(26px,3vw,32px);letter-spacing:.005em;text-transform:none;color:var(--fg);margin:0;display:block}
+h2.dtitle::after{display:none}
+.dsub{margin:4px 0 0;color:var(--muted);max-width:68ch}
+.dctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:flex-end}
+.dprog{font-family:var(--mono);font-size:14px;color:var(--muted)}
+.dprog b{color:var(--accent);font-weight:400}
+.dbar{width:110px;height:6px;border-radius:3px;background:var(--chip);overflow:hidden}
+.dbar i{display:block;height:100%;background:var(--accent);transition:width .25s}
+.dbtn{font-family:var(--cond);font-size:15.5px;font-weight:600;letter-spacing:.03em;padding:7px 13px}
+.dbtn.pri{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.dbtn.ghost{border-color:transparent;background:transparent;color:var(--muted)}
+.dbtn:disabled{opacity:.45;cursor:default}
+.dsteps{list-style:none;margin:0;padding:0;counter-reset:none}
+.dstep{display:grid;grid-template-columns:40px minmax(0,1fr);gap:14px;padding:18px 0;border-bottom:1px solid var(--edge);position:relative}
+.dstep:last-child{border-bottom:0;padding-bottom:4px}
+.dn{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-family:var(--mono);font-size:15px;border:1.5px solid var(--line2);color:var(--muted);background:var(--panel)}
+.dstep.open .dn{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.dstep.next .dn{border-color:var(--accent);color:var(--accent)}
+.dw{min-width:0}
+.dstep h3{font-family:var(--cond);font-weight:600;font-size:21px;margin:3px 0 6px;letter-spacing:.01em}
+.dq{margin:0 0 10px;color:var(--muted);font-size:15px}
+.dq span{font-family:var(--cond);font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-size:13px;color:var(--accent);margin-right:4px}
+.dunl{font-family:var(--cond);font-size:15px;font-weight:600;letter-spacing:.03em;border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.dbody{color:var(--fg);font-size:15.5px}
+.dbody p{margin:6px 0;max-width:76ch}
+.dbody mjx-container[display="true"]{display:block;margin:10px 0!important;padding:10px 12px;overflow-x:auto;overflow-y:hidden;max-width:100%;background:var(--surface2);border:1px solid var(--edge);border-radius:8px}
+.dtab{border-collapse:collapse;margin:8px 0;font-size:15px;display:block;overflow-x:auto;max-width:100%}
+.dtab td{padding:7px 14px 7px 0;border-bottom:1px solid var(--edge);vertical-align:middle}
+.dtab td:first-child{white-space:nowrap;padding-right:22px}
+.dstep.open .dq,.dstep.open .dunl{display:none}
+.dstep.next .dbody{display:none}
+.dstep.locked .dbody,.dstep.locked .dq,.dstep.locked .dunl{display:none}
+.dstep.locked h3{color:var(--faint)}
+.dstep.locked h3 mjx-container{opacity:.6}
+.dstep.open .dbody{animation:dfade .3s ease}
+@keyframes dfade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+@media (max-width:760px){.dbody mjx-container[display="true"] svg{max-width:100%;height:auto}.dhead{grid-template-columns:minmax(0,1fr)}.dctl{justify-content:flex-start}.deriv{padding:16px}.dstep{grid-template-columns:32px minmax(0,1fr);gap:10px}.dn{width:28px;height:28px;font-size:14px}}
 @media (max-width:1000px){.bar{flex-wrap:wrap}.bar .ctrls{margin-left:0;padding-left:0;border-left:0}}
 @media (max-width:900px){.layout{grid-template-columns:minmax(0,1fr)}.row2{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:620px){.plate{grid-template-columns:minmax(0,1fr)}.mno{grid-row:auto;justify-self:start;margin-top:0}
   .pager{grid-template-columns:1fr}.pager .nx,.pager .pv{grid-column:1}.pager .nx{justify-content:flex-start;text-align:left}
   .bar .ctrls{width:100%;flex-wrap:wrap}.eq>span{font-size:14.5px}
   svg[viewBox^="0 0 680"]:not([viewBox$=" 74"]) text{font-size:23px}svg[viewBox^="0 0 680"]:not([viewBox$=" 74"]) text.mv{font-size:26px}svg[viewBox^="0 0 680"]:not([viewBox$=" 74"]) circle{r:5px}}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 
 
 </style>
@@ -158,7 +200,7 @@ svg text.mv{font-family:var(--math);font-style:italic;font-size:15px;paint-order
     <span class="mno">MD-10</span>
     <span class="grp">Modelos III · Macroeconomía dinámica</span>
     <h1>Ciclo y crecimiento: el modelo de Hicks</h1>
-    <p class="sub">Dinámica de Samuelson alrededor de una tendencia de crecimiento, con techo y piso que acotan el ciclo.</p>
+    <p class="sub">Dinámica de Samuelson alrededor de una tendencia de crecimiento, con techo y piso que acotan el ciclo. <a class="dlink" href="#derivacion">Ver la derivación paso a paso ↓</a></p>
     <div class="eq"><span>\(Y_{t+2}-(\gamma+\alpha)Y_{t+1}+\alpha Y_t=I_0(1+g)^{t+2}\)</span><span>\(Y^p_t=A(1+g)^t\)</span><span>\(\text{estable}\iff\alpha\lt 1\)</span></div>
   </header>
   <div class="bar">
@@ -184,6 +226,14 @@ svg text.mv{font-family:var(--math);font-style:italic;font-size:15px;paint-order
       <div class="card "><h2>Parámetros</h2><div class="ctl"><label for="ga"><span class="lt">\(\gamma\) (propensión al consumo)</span><output id="o_ga"></output></label><input type="range" id="ga" min="0.05" max="0.95" step="0.01" value="0.6" data-d="2"></div><div class="ctl"><label for="al"><span class="lt">\(\alpha\) (acelerador)</span><output id="o_al"></output></label><input type="range" id="al" min="0.05" max="3" step="0.05" value="0.5" data-d="2"></div><div class="ctl"><label for="g"><span class="lt">\(g\) (crecimiento de \(I''\))</span><output id="o_g"></output></label><input type="range" id="g" min="0" max="0.08" step="0.005" value="0.03" data-d="3"></div><div class="ctl"><label for="I"><span class="lt">\(I_0\) (inversión autónoma)</span><output id="o_I"></output></label><input type="range" id="I" min="5" max="50" step="1" value="10" data-d="0"></div><div class="ctl"><label for="sh"><span class="lt">Desvío inicial de \(Y_1\) (% de la tendencia)</span><output id="o_sh"></output></label><input type="range" id="sh" min="-20" max="30" step="1" value="10" data-d="0"></div><div class="ctl"><label for="ck"><span>Techo y piso (ilustración)</span></label><input type="checkbox" id="ck" style="width:18px;height:18px;accent-color:var(--supply)"></div><div class="ctl"><label for="ce"><span class="lt">Techo: % sobre la tendencia</span><output id="o_ce"></output></label><input type="range" id="ce" min="5" max="40" step="1" value="15" data-d="0"></div><div class="ctl"><label for="fl"><span class="lt">Piso: % bajo la tendencia</span><output id="o_fl"></output></label><input type="range" id="fl" min="5" max="40" step="1" value="15" data-d="0"></div><div class="ctl"><label for="sp"><span class="lt">Velocidad</span><output id="o_sp"></output></label><input type="range" id="sp" min="0.5" max="6" step="0.5" value="3" data-d="1"></div><p class="hint">Con el techo y el piso, Y<sub>t</sub> se recorta a esa franja en cada período. Es una simplificación para ver cómo el caso α ≥ 1 deja de explotar.</p></div>
     </aside>
   </div>
+  <section class="deriv" id="derivacion" aria-labelledby="dtit"><header class="dhead"><div><h2 class="dtitle" id="dtit">Derivación paso a paso</h2><p class="dsub">Samuelson con inversión autónoma creciente: la solución particular deja de ser constante.</p></div><div class="dctl"><span class="dprog" role="status">Paso <b id="dk">1</b> de 6</span><div class="dbar"><i id="dfill" style="width:16.7%"></i></div><button type="button" id="dnext" class="dbtn">Desbloquear siguiente</button><button type="button" id="dall" class="dbtn pri">Mostrar derivación completa</button><button type="button" id="dreset" class="dbtn ghost">Volver a empezar</button></div></header><ol class="dsteps"><li class="dstep open" id="paso-1"><div class="dn" aria-hidden="true">1</div><div class="dw"><h3>El sistema</h3><p class="dq"><span>Siguiente:</span> seguí con la derivación.</p><button type="button" class="dunl">Desbloquear paso 1</button><div class="dbody">\[ \begin{cases} Y_t=C_t+I'_t+I''_t\\ C_t=\gamma\,Y_{t-1}\\ I'_t=\alpha\,(Y_{t-1}-Y_{t-2})\\ I''_t=I_0(1+g)^t \end{cases} \]</div></div></li><li class="dstep next" id="paso-2"><div class="dn" aria-hidden="true">2</div><div class="dw"><h3>Reducción</h3><p class="dq"><span>Antes de abrirlo:</span> Sustituí todo en la primera ecuación.</p><button type="button" class="dunl">Desbloquear paso 2</button><div class="dbody">\[ Y_t=\gamma Y_{t-1}+\alpha(Y_{t-1}-Y_{t-2})+I_0(1+g)^t \]
+\[ \boxed{Y_{t+2}-(\gamma+\alpha)Y_{t+1}+\alpha\,Y_t=I_0(1+g)^{t+2}} \]
+<p>\(p=-(\gamma+\alpha)\), \(q=\alpha\). El término independiente ya no es constante.</p></div></div></li><li class="dstep locked" id="paso-3"><div class="dn" aria-hidden="true">3</div><div class="dw"><h3>Solución particular</h3><p class="dq"><span>Antes de abrirlo:</span> Como el término independiente es \((1+g)^t\), proponé \(Y^p_t=A(1+g)^t\).</p><button type="button" class="dunl">Desbloquear paso 3</button><div class="dbody">\[ A(1+g)^{t+2}-(\gamma+\alpha)A(1+g)^{t+1}+\alpha A(1+g)^t=I_0(1+g)^{t+2} \]
+<p>Dividiendo por \((1+g)^t\):</p>
+\[ \boxed{A=\frac{I_0(1+g)^2}{(1+g)^2-(\gamma+\alpha)(1+g)+\alpha}} \]
+<p>El ingreso de equilibrio crece a la tasa \(g\).</p></div></div></li><li class="dstep locked" id="paso-4"><div class="dn" aria-hidden="true">4</div><div class="dw"><h3>Ecuación característica</h3><p class="dq"><span>Siguiente:</span> seguí con la derivación.</p><button type="button" class="dunl">Desbloquear paso 4</button><div class="dbody">\[ r^2-(\gamma+\alpha)\,r+\alpha=0,\qquad\Delta=(\gamma+\alpha)^2-4\alpha \]
+\[ \Delta\lt 0\iff\gamma\lt 2\sqrt\alpha-\alpha \]</div></div></li><li class="dstep locked" id="paso-5"><div class="dn" aria-hidden="true">5</div><div class="dw"><h3>Condición de estabilidad</h3><p class="dq"><span>Siguiente:</span> seguí con la derivación.</p><button type="button" class="dunl">Desbloquear paso 5</button><div class="dbody">\[ \begin{cases} 1-\alpha\gt 0\\ 1-(\gamma+\alpha)+\alpha=1-\gamma\gt 0\quad\checkmark\\ 1+(\gamma+\alpha)+\alpha=1+\gamma+2\alpha\gt 0\quad\checkmark \end{cases}\quad\Longrightarrow\quad\alpha\lt 1 \]</div></div></li><li class="dstep locked" id="paso-6"><div class="dn" aria-hidden="true">6</div><div class="dw"><h3>Solución general</h3><p class="dq"><span>Siguiente:</span> seguí con la derivación.</p><button type="button" class="dunl">Desbloquear paso 6</button><div class="dbody">\[ Y_t=A(1+g)^t+z_t \]
+<p>donde \(z_t\) es la solución de la homogénea. Si \(\alpha\lt 1\), \(z_t\to0\) y el ingreso converge a la tendencia. Si \(\alpha\ge1\), las oscilaciones no se amortiguan: Hicks las acota con un techo (pleno empleo) y un piso (inversión autónoma).</p></div></div></li></ol></section>
   <nav class="pager" aria-label="Otros módulos"><a class="pv" href="samuelson.html"><span class="d">◀ MD-09</span><span class="n">Samuelson</span></a><a class="nx" href="inflacion-desempleo.html"><span class="n">Inflación y desempleo</span><span class="d">MD-11 ▶</span></a></nav>
 </div>
 <footer class="foot"><span>Matemática Aplicada II · FCE-UBA</span><span>Chiang y Wainwright, cap. 17–18 · Bernardello et al., cap. 3</span></footer>
@@ -326,6 +376,18 @@ $('ck').addEventListener('change',function(){An.fit();render()});
 drag($('c3'),function(xy){setv('al',Math.round(cl(MF.ix(xy[0]),0.05,3)*20)/20);setv('ga',Math.round(cl(MF.iy(xy[1]),0.05,0.95)*100)/100);An.fit();render()});
 bindSliders(['ga','al','g','I','sh','ce','fl','sp'],function(){An.fit();render()});
 An.full();
+
+
+(function(){var S=[].slice.call(document.querySelectorAll('.dstep'));if(!S.length)return;var k=1,n=S.length,RM=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+ function upd(go){S.forEach(function(e,i){e.classList.toggle('open',i<k);e.classList.toggle('next',i===k);e.classList.toggle('locked',i>k)});
+  document.getElementById('dk').textContent=Math.min(k,n);document.getElementById('dfill').style.width=(100*Math.min(k,n)/n)+'%';
+  document.getElementById('dnext').disabled=k>=n;document.getElementById('dall').disabled=k>=n;
+  if(go&&S[go-1])S[go-1].scrollIntoView({behavior:RM?'auto':'smooth',block:'nearest'})}
+ S.forEach(function(e,i){e.querySelector('.dunl').addEventListener('click',function(){k=i+1;upd(k)})});
+ document.getElementById('dnext').addEventListener('click',function(){if(k<n){k++;upd(k)}});
+ document.getElementById('dall').addEventListener('click',function(){k=n;upd()});
+ document.getElementById('dreset').addEventListener('click',function(){k=1;upd(1)});
+ upd()})();
 
 (function(){var b=document.getElementById('pl');if(!b)return;var f=function(){b.classList.toggle('run',/paus/i.test(b.textContent))};new MutationObserver(f).observe(b,{childList:true,characterData:true,subtree:true});f()})();
 </script>

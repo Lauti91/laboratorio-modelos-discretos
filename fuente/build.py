@@ -123,6 +123,32 @@ def pager(slug):
     else:
         o+='<a class="nx" href="index.html"><span class="n">Volver al índice</span><span class="d">▶</span></a>'
     return o+'</nav>'
+exec(open(os.path.join(H,'derivs.py'),encoding='utf-8').read())
+def deriv_html(fn):
+    if fn not in DERIV: return ''
+    intro,steps=DERIV[fn];n=len(steps);li=''
+    for i,(t,q,body) in enumerate(steps):
+        qh=f'<p class="dq"><span>Antes de abrirlo:</span> {q}</p>' if q else '<p class="dq"><span>Siguiente:</span> seguí con la derivación.</p>'
+        li+=(f'<li class="dstep{" open" if i==0 else (" next" if i==1 else " locked")}" id="paso-{i+1}">'
+             f'<div class="dn" aria-hidden="true">{i+1}</div><div class="dw"><h3>{t}</h3>{qh}'
+             f'<button type="button" class="dunl">Desbloquear paso {i+1}</button><div class="dbody">{body}</div></div></li>')
+    return (f'<section class="deriv" id="derivacion" aria-labelledby="dtit"><header class="dhead"><div><h2 class="dtitle" id="dtit">Derivación paso a paso</h2>'
+            f'<p class="dsub">{intro}</p></div><div class="dctl"><span class="dprog" role="status">Paso <b id="dk">1</b> de {n}</span>'
+            f'<div class="dbar"><i id="dfill" style="width:{100/n:.1f}%"></i></div>'
+            f'<button type="button" id="dnext" class="dbtn">Desbloquear siguiente</button><button type="button" id="dall" class="dbtn pri">Mostrar derivación completa</button>'
+            f'<button type="button" id="dreset" class="dbtn ghost">Volver a empezar</button></div></header><ol class="dsteps">{li}</ol></section>')
+DJS=r"""
+(function(){var S=[].slice.call(document.querySelectorAll('.dstep'));if(!S.length)return;var k=1,n=S.length,RM=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+ function upd(go){S.forEach(function(e,i){e.classList.toggle('open',i<k);e.classList.toggle('next',i===k);e.classList.toggle('locked',i>k)});
+  document.getElementById('dk').textContent=Math.min(k,n);document.getElementById('dfill').style.width=(100*Math.min(k,n)/n)+'%';
+  document.getElementById('dnext').disabled=k>=n;document.getElementById('dall').disabled=k>=n;
+  if(go&&S[go-1])S[go-1].scrollIntoView({behavior:RM?'auto':'smooth',block:'nearest'})}
+ S.forEach(function(e,i){e.querySelector('.dunl').addEventListener('click',function(){k=i+1;upd(k)})});
+ document.getElementById('dnext').addEventListener('click',function(){if(k<n){k++;upd(k)}});
+ document.getElementById('dall').addEventListener('click',function(){k=n;upd()});
+ document.getElementById('dreset').addEventListener('click',function(){k=1;upd(1)});
+ upd()})();
+"""
 def page(fn,title,h1,sub,eqs,bar,charts,side,js,extra_css=''):
     r=BYFN[fn];slug,grp,short=r[1],r[2],r[3];g=GROUPS[grp]
     if fn in TEX: eqs=[T(e) for e in TEX[fn]]
@@ -139,7 +165,7 @@ def page(fn,title,h1,sub,eqs,bar,charts,side,js,extra_css=''):
     <span class="mno">{mno(slug)}</span>
     <span class="grp">{g[0]} · {g[1]}</span>
     <h1>{h1}</h1>
-    <p class="sub">{sub}</p>
+    <p class="sub">{sub}{' <a class="dlink" href="#derivacion">Ver la derivación paso a paso ↓</a>' if fn in DERIV else ''}</p>
     <div class="eq">{eqh}</div>
   </header>
 {bar}
@@ -151,12 +177,14 @@ def page(fn,title,h1,sub,eqs,bar,charts,side,js,extra_css=''):
 {side}
     </aside>
   </div>
+  {deriv_html(fn)}
   {pager(slug)}
 </div>
 {foot()}
 <script>
 {LIB}
 {js}
+{DJS}
 (function(){{var b=document.getElementById('pl');if(!b)return;var f=function(){{b.classList.toggle('run',/paus/i.test(b.textContent))}};new MutationObserver(f).observe(b,{{childList:true,characterData:true,subtree:true}});f()}})();
 </script>
 </body>
